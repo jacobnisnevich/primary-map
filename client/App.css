@@ -13,3 +13,10 @@ body {
   font-size: 12px;
   margin-top: 10px;
 }
+
+#state-tooltip {
+  background-color: white;
+  color: black;
+  width: 200px;
+  padding: 0;
+}

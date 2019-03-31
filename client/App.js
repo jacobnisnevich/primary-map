@@ -7,6 +7,7 @@ import {
   Geographies,
   Geography,
 } from 'react-simple-maps';
+import ReactTooltip from 'react-tooltip'
 
 import './App.css';
 
@@ -19,6 +20,11 @@ class App extends Component {
   async componentDidMount() {
     const response = await axios.get('/map-data');
     const { pollingData, palette } = response.data;
+    
+    setTimeout(() => {
+      ReactTooltip.rebuild()
+    }, 100)
+
     this.setState({ pollingData, palette });
   }
 
@@ -56,7 +62,29 @@ class App extends Component {
     return this.getColorForCandidate(leadingCandidate);
   }
 
-  getCandidateColorForLegend = (index, color, candidate) => {
+  getTooltipForState = stateName => {
+    const { pollingData } = this.state;
+    const stateData = pollingData[stateName];
+
+    if (isEmpty(pollingData) || isEmpty(stateData)) {
+      return null;
+    }
+
+    return (
+      <div style={{ border: '2px solid #CCC' }}>
+        <div style={{ fontWeight: 'bold', textAlign: 'center', margin: 5 }}>{stateName}</div>
+        {Object.keys(stateData).sort((a, b) => stateData[b] - stateData[a]).map((candidate, index) => (
+          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+            {this.getCandidateColorForLegend(index, candidate)}&nbsp;-&nbsp;{stateData[candidate] || 0}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  getCandidateColorForLegend = (index, candidate) => {
+    const color = this.getColorForCandidate(candidate);
+
     return (
       <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
         <div style={{ backgroundColor: color, border: '1px solid black', height: 16, width: 16, margin: 8 }}/>
@@ -71,7 +99,7 @@ class App extends Component {
     return (
       <div style={{ border: '2px solid #CCC', display: 'flex', width: 800, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center', paddingRight: 8 }}>
         {Object.keys(palette).map((candidate, index) => (
-          this.getCandidateColorForLegend(index, this.getColorForCandidate(candidate), candidate))
+          this.getCandidateColorForLegend(index, candidate))
         )}
       </div>
     )
@@ -112,6 +140,8 @@ class App extends Component {
 
                     return (
                       <Geography
+                        data-for="state-tooltip"
+                        data-tip={geography.properties.NAME_1}
                         key={`state-${geography.properties.ID_1}`}
                         cacheId={`state-${geography.properties.ID_1}`}
                         round
@@ -131,6 +161,7 @@ class App extends Component {
           </ComposableMap>
         </div>
         {this.getLegend()}
+        <ReactTooltip id="state-tooltip" getContent={(stateName) => this.getTooltipForState(stateName)}/>
       </div>
     );
   }
