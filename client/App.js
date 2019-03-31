@@ -69,7 +69,7 @@ class App extends Component {
     const { palette } = this.state;
     
     return (
-      <div style={{ border: '1px solid black', display: 'flex', width: 800, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div style={{ border: '2px solid #CCC', display: 'flex', width: 800, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center', paddingRight: 8 }}>
         {Object.keys(palette).map((candidate, index) => (
           this.getCandidateColorForLegend(index, this.getColorForCandidate(candidate), candidate))
         )}
@@ -80,6 +80,8 @@ class App extends Component {
   render() {
     return (
       <div>
+        <div id="header">2020 Democratic State Primary Polling</div>
+        <div id="subtitle">All polling numbers gathered on page-load from Wikipedia's state-wide <a href="https://en.wikipedia.org/wiki/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries">polling data</a>. Polling average is based on most recent 5 polls in each state.</div>
         <div style={{
           width: '100%',
           maxWidth: 980,
@@ -101,6 +103,13 @@ class App extends Component {
               <Geographies geography="/static/states.json" disableOptimization>
                 {(geographies, projection) =>
                   geographies.map((geography, i) => {
+                    const colorData = {
+                      fill: this.getColorForState(geography.properties.NAME_1),
+                      stroke: '#607D8B',
+                      strokeWidth: 0.75,
+                      outline: 'none',
+                    };
+
                     return (
                       <Geography
                         key={`state-${geography.properties.ID_1}`}
@@ -109,12 +118,9 @@ class App extends Component {
                         geography={geography}
                         projection={projection}
                         style={{
-                          default: {
-                            fill: this.getColorForState(geography.properties.NAME_1),
-                            stroke: '#607D8B',
-                            strokeWidth: 0.75,
-                            outline: 'none',
-                          }
+                          default: colorData,
+                          hover: { ...colorData, cursor: 'pointer' },
+                          pressed: colorData,
                         }}
                       />
                     )
