@@ -10,8 +10,6 @@ const app = express();
 
 app.use(morgan('tiny'));
 app.use(favicon(path.join(__dirname, '/../build/favicon.ico')));
-app.use(express.static(__dirname));
-app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/static',  express.static(path.join(__dirname, '/../static')))
 
@@ -20,8 +18,12 @@ app.get('/map-data', async (req, res) => {
   res.send(mapData);
 });
 
-app.get('/*', async (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname));
+  app.use(express.static(path.join(__dirname, 'build')));
+  app.get('/*', async (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
 
 app.listen(port, () => `App listening on port ${port}!`);
