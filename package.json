@@ -65,8 +65,8 @@
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "start:server": "nodemon --exec babel-node server/index.js",
+    "start:client": "node scripts/start.js",
+    "start": "nodemon --exec babel-node server/index.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "heroku-postbuild": "yarn build"
