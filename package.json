@@ -54,7 +54,6 @@
     "react-dev-utils": "^8.0.0",
     "react-dom": "^16.8.6",
     "react-simple-maps": "^0.12.1",
-    "react-usa-map": "^1.3.0",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
@@ -69,7 +68,8 @@
     "start": "node scripts/start.js",
     "start:server": "nodemon --exec babel-node server/index.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "heroku-postbuild": "yarn build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -77,11 +77,14 @@
   "proxy": "http://localhost:8080",
   "babel": {
     "presets": [
-      ["@babel/preset-env", {
-        "targets": {
-          "node": "current"
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
         }
-      }],
+      ],
       "@babel/preset-react"
     ],
     "plugins": [
