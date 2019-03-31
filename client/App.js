@@ -28,16 +28,17 @@ class App extends Component {
   }
 
   getColorForState = stateName => {
+    const EMPTY_COLOR = '#EEEEEE';
     const { pollingData } = this.state;
 
     if (isEmpty(pollingData)) {
-      return '#EEEEEE';
+      return EMPTY_COLOR;
     }
 
     const stateData = pollingData[stateName];
 
     if (isEmpty(stateData)) {
-      return '#EEEEEE';
+      return EMPTY_COLOR;
     }
 
     const leadingCandidate = Object.keys(stateData).reduce((previousValue, currentValue) => {
@@ -49,7 +50,7 @@ class App extends Component {
     }, undefined);
 
     if (!leadingCandidate) {
-      return '#EEEEEE';
+      return EMPTY_COLOR;
     }
 
     return this.getColorForCandidate(leadingCandidate);
