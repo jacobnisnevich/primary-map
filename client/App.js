@@ -71,16 +71,19 @@ class App extends Component {
     }
 
     return (
-      <div style={{ border: '2px solid #CCC' }}>
+      <div style={{ border: '2px solid #CCCCCC' }}>
         <div style={{ fontWeight: 'bold', textAlign: 'center', margin: 5 }}>{stateName}</div>
         {Object.keys(stateData).sort((a, b) => stateData[b] - stateData[a]).map((candidate, index) => (
-          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-            {this.getCandidateColorForLegend(index, candidate)}&nbsp;-&nbsp;{stateData[candidate] || 0}
+          <div key={index} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            {this.getCandidateColorForLegend(index, candidate)}
+            <div style={{ marginRight: 8 }}>{this.formatPercentage(stateData[candidate] || 0)}</div>
           </div>
         ))}
       </div>
     );
   }
+
+  formatPercentage = percentage => `${percentage.toFixed(1)}%`
 
   getCandidateColorForLegend = (index, candidate) => {
     const color = this.getColorForCandidate(candidate);
@@ -97,7 +100,7 @@ class App extends Component {
     const { palette } = this.state;
     
     return (
-      <div style={{ border: '2px solid #CCC', display: 'flex', width: 800, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center', paddingRight: 8 }}>
+      <div style={{ border: '2px solid #CCCCCC', display: 'flex', width: 800, margin: '0 auto', flexWrap: 'wrap', justifyContent: 'center', paddingRight: 8 }}>
         {Object.keys(palette).map((candidate, index) => (
           this.getCandidateColorForLegend(index, candidate))
         )}

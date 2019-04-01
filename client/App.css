@@ -19,4 +19,10 @@ body {
   color: black;
   width: 200px;
   padding: 0;
+  opacity: 0.95;
+}
+
+#state-tooltip:after {
+  border-bottom-color: #CCCCCC;
+  border-top-color: #CCCCCC;
 }
