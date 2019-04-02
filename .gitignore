@@ -10,6 +10,7 @@
 
 # production
 /build
+/built
 
 # misc
 .DS_Store
@@ -17,6 +18,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# vscode
+.vscode/
+primary-map.code-workspace
 
 npm-debug.log*
 yarn-debug.log*

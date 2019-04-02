@@ -1,16 +1,18 @@
-export const STATE_NAMES = [
-  'Alabama', 
-  'Alaska', 
-  'Arizona', 
-  'Arkansas', 
-  'California', 
-  'Colorado', 
-  'Connecticut', 
-  'Delaware', 
-  'Washington DC', 
-  'Florida', 
-  'Georgia', 
-  'Hawaii', 
+import * as p from '../types';
+
+export const STATE_NAMES: p.State[] = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Washington DC',
+  'Florida',
+  'Georgia',
+  'Hawaii',
   'Idaho',
   'Illinois',
   'Indiana',
@@ -53,5 +55,5 @@ export const STATE_NAMES = [
   'Wyoming'
 ];
 
-export const CAUCUS = 'caucus';
-export const PRIMARY = 'primary';
+export const CAUCUS: p.Election = 'caucus';
+export const PRIMARY: p.Election = 'primary';

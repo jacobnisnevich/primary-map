@@ -1,7 +1,7 @@
-import express from 'express';
-import favicon from 'express-favicon';
-import path from 'path';
-import morgan from 'morgan';
+import * as express from 'express';
+import * as favicon from 'express-favicon';
+import * as path from 'path';
+import * as morgan from 'morgan';
 
 import { getMapData } from './mapData';
 
@@ -26,4 +26,4 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(port, () => `App listening on port ${port}!`);
+app.listen(port, () => console.log(`App listening on port ${port}!`));
