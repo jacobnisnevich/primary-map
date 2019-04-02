@@ -8,6 +8,13 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
     "@svgr/webpack": "4.1.0",
+    "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.11",
+    "@types/chroma-js": "^1.4.1",
+    "@types/express": "^4.16.1",
+    "@types/lodash": "^4.14.123",
+    "@types/node": "^11.13.0",
+    "@types/range-parser": "^1.2.3",
     "axios": "^0.18.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
@@ -66,13 +73,14 @@
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
+    "start": "node built/index.js",
     "start:all": "concurrently \"yarn start:server\" \"yarn start:client\"",
-    "start:server": "nodemon --exec babel-node server/index.js",
+    "start:server": "concurrently \"tsc -w\" \"nodemon built/index.js\" ",
     "start:client": "node scripts/start.js",
-    "start": "babel-node server/index.js",
-    "build": "node scripts/build.js",
+    "build:client": "node scripts/build.js",
+    "build:server": "tsc",
     "test": "node scripts/test.js",
-    "heroku-postbuild": "yarn build"
+    "heroku-postbuild": "yarn build:client"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -102,6 +110,8 @@
   ],
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "prettier": "^1.16.4",
+    "typescript": "^3.4.1"
   }
 }

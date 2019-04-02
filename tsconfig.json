@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "allowJs": true,
+    "target": "es5",
+    "incremental": true,
+    "sourceMap": true
+  },
+  "include": [
+    "./server/**/*"
+  ]
+}
