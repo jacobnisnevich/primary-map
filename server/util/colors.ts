@@ -3,7 +3,7 @@ import { zipObject } from 'lodash';
 
 import * as p from '../types';
 
-import { getUniqueCandidateList } from '../data/pollingOperations';
+import { getUniqueCandidateList } from '../data-utils/polling-operations';
 
 export const getPalette = (pollingData: p.PollingData): p.Palette => {
   const distinctCandidateNames = getUniqueCandidateList(pollingData);

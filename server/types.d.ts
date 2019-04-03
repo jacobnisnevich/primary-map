@@ -16,6 +16,12 @@ export interface Poll {
   candidateResults: CandidateResults;
 }
 
+export interface ExpandedPoll extends Poll {
+  state: State;
+}
+
+export type FlatPoll = Record<string, any>;
+
 export interface TableDefinition {
   candidates: Candidate[];
   columnCount: number;
@@ -25,3 +31,5 @@ export interface MapData {
   averagedPollingData: AveragedPollingData;
   palette: Palette;
 }
+
+export type ParquetSchema = Record<string, { type: string }>;

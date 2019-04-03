@@ -138,7 +138,14 @@ const getPollFromTableDataRow = (
 };
 
 const cleanUpDateValue = (dateValue: string): Date => {
-  return new Date(dateValue.replace(/(...) ..+–(.*)/i, '$1 $2'));
+  const numberOfMonths = dateValue.replace(/a-zA-Z/g, '').length / 3;
+  if (numberOfMonths === 1) {
+    return new Date(dateValue.replace(/(...) ..+–(.*)/i, '$1 $2'));
+  } else if (numberOfMonths === 2) {
+    return new Date(dateValue.replace(/(.*) – (.*)/i, '$2'));
+  } else {
+    return new Date();
+  }
 };
 
 const cleanUpSampleSizeValue = (sampleSizeValue: string): number => {

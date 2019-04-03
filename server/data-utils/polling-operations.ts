@@ -2,6 +2,8 @@ import { isNaN, flatten, uniq, zipObject } from 'lodash';
 
 import * as p from '../types';
 
+import { schematizeCandidateNames } from '../util/common';
+
 export const computePollingAverages = (pollingData: p.PollingData, pollCount: number) => {
   const averagedPollingData = {};
 
@@ -15,6 +17,48 @@ export const computePollingAverages = (pollingData: p.PollingData, pollCount: nu
 export const getUniqueCandidateList = (pollingData: p.PollingData): p.Candidate[] => {
   const statePolls = flatten(Object.values(pollingData));
   return getUniqueCandidateListFromPolls(statePolls);
+};
+
+export const expandPollingData = (pollingData: p.PollingData): p.ExpandedPoll[] => {
+  const states = Object.keys(pollingData);
+  const candidateList = getUniqueCandidateList(pollingData);
+
+  return states.reduce((expandedPolls: p.ExpandedPoll[], currentState: p.State) => {
+    const statePolls = pollingData[currentState];
+    const expandedStatePolls = expandStatePolls(currentState, statePolls, candidateList);
+    return [...expandedPolls, ...expandedStatePolls];
+  }, []);
+};
+
+export const flattenPollingData = (expandedPollingData: p.ExpandedPoll[]): p.FlatPoll[] => {
+  return expandedPollingData.map((expandedPoll: p.ExpandedPoll) => ({
+    date: expandedPoll.date,
+    sample_size: expandedPoll.sampleSize,
+    margin_of_error: expandedPoll.marginOfError,
+    state: expandedPoll.state,
+    ...expandedPoll.candidateResults
+  }));
+};
+
+const expandStatePolls = (state: p.State, statePolls: p.Poll[], candidates: p.Candidate[]): p.ExpandedPoll[] => {
+  return statePolls.map((statePoll: p.Poll) => {
+    const stateCandidateResults = candidates.map((candidate: p.Candidate) => {
+      if (statePoll.candidateResults[candidate]) {
+        return statePoll.candidateResults[candidate];
+      } else {
+        return 0;
+      }
+    });
+    const candidateResults = zipObject(schematizeCandidateNames(candidates), stateCandidateResults);
+
+    const expandedStatePoll = {
+      ...statePoll,
+      candidateResults,
+      state
+    };
+
+    return expandedStatePoll;
+  });
 };
 
 const computePollingAveragesForState = (polls: p.Poll[], pollCount: number): p.CandidateResults => {
