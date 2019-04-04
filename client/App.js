@@ -93,7 +93,7 @@ class App extends Component {
     return (
       <div>
         <div id="header">2020 Democratic State Primary Polling</div>
-        <div class="subtitle">
+        <div className="subtitle">
           All polling numbers gathered on page-load from Wikipedia's state-wide{' '}
           <a href="https://en.wikipedia.org/wiki/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries">
             polling data
@@ -101,7 +101,7 @@ class App extends Component {
           .
         </div>
         <div id="primary-map">Primary Map</div>
-        <div class="subtitle">Polling average is based on most recent 5 polls in each state.</div>
+        <div className="subtitle">Polling average is based on most recent 5 polls in each state.</div>
         <PrimaryMap averagePollingData={this.state.averagePollingData} palette={this.state.palette} />
         <ReactTooltip id="state-tooltip" getContent={stateName => this.getTooltipForState(stateName)} />
         {this.getLegend()}

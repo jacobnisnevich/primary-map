@@ -43,12 +43,12 @@ export default class PollTable extends Component {
         {filteredPollData.map((poll, rowIndex) => {
           const columns = Object.values(poll);
           const candidateColumns = columns.slice(4, columns.length - 1);
-          const winningCandidateIndex = columns.indexOf(Math.max([candidateColumns]));
+          const winningCandidateIndex = columns.indexOf(Math.max(...candidateColumns));
 
           return (
             <tr key={rowIndex}>
               {Object.keys(poll).map((column, columnIndex) => (
-                <td key={columnIndex} className={columnIndex === winningCandidateIndex + 5 && 'winner'}>
+                <td key={columnIndex} className={columnIndex === winningCandidateIndex ? 'winner' : ''}>
                   {getColumnFormatter(column)(poll[column])}
                 </td>
               ))}
