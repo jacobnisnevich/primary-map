@@ -5,7 +5,7 @@ export type Candidate = string;
 export type Election = 'caucus' | 'primary';
 
 export type CandidateResults = Record<Candidate, number>;
-export type PollingData = Record<State, Poll[]>;
+export type StatePollingData = Record<State, Poll[]>;
 export type AveragedPollingData = Record<State, CandidateResults>;
 export type Palette = Record<Candidate, ChromaStatic>;
 
@@ -15,6 +15,12 @@ export interface Poll {
   marginOfError?: number;
   candidateResults: CandidateResults;
 }
+
+export interface ExpandedPoll extends Poll {
+  state: State;
+}
+
+export type FlatPoll = Record<string, any>;
 
 export interface TableDefinition {
   candidates: Candidate[];

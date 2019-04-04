@@ -80,7 +80,7 @@
     "build:client": "node scripts/build.js",
     "build:server": "tsc",
     "test": "node scripts/test.js",
-    "heroku-postbuild": "yarn build:client"
+    "heroku-postbuild": "yarn build:client && yarn build:server"
   },
   "eslintConfig": {
     "extends": "react-app"

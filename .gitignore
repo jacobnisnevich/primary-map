@@ -11,6 +11,7 @@
 # production
 /build
 /built
+polls.csv
 
 # misc
 .DS_Store

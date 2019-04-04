@@ -6,7 +6,7 @@ import * as p from '../types';
 
 import { STATE_NAMES, CAUCUS, PRIMARY } from '../util/constants';
 
-export const loadWikipediaPollingData = async (): Promise<p.PollingData> => {
+export const loadWikipediaPollingData = async (): Promise<p.StatePollingData> => {
   const WIKIPEDIA_POLLING_URL =
     'https://en.wikipedia.org/wiki/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
   const response = await axios.get(WIKIPEDIA_POLLING_URL);
@@ -138,7 +138,14 @@ const getPollFromTableDataRow = (
 };
 
 const cleanUpDateValue = (dateValue: string): Date => {
-  return new Date(dateValue.replace(/(...) ..+–(.*)/i, '$1 $2'));
+  const numberOfMonths = dateValue.replace(/[^a-zA-Z]/g, '').length / 3;
+  if (numberOfMonths === 1) {
+    return new Date(dateValue.replace(/(...) .+–(.*)/i, '$1 $2'));
+  } else if (numberOfMonths === 2) {
+    return new Date(dateValue.replace(/(.*) – (.*)/i, '$2'));
+  } else {
+    return new Date();
+  }
 };
 
 const cleanUpSampleSizeValue = (sampleSizeValue: string): number => {

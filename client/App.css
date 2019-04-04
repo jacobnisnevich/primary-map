@@ -8,10 +8,17 @@ body {
   margin-top: 48px;
 }
 
-#subtitle {
+.subtitle {
   text-align: center;
   font-size: 12px;
   margin-top: 10px;
+}
+
+#primary-map,
+#recent-polls {
+  text-align: center;
+  font-size: 24px;
+  margin: 40px 0 20px;
 }
 
 #state-tooltip {
@@ -23,6 +30,6 @@ body {
 }
 
 #state-tooltip:after {
-  border-bottom-color: #CCCCCC;
-  border-top-color: #CCCCCC;
+  border-bottom-color: #cccccc;
+  border-top-color: #cccccc;
 }
