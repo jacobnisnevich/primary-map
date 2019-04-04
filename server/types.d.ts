@@ -5,7 +5,7 @@ export type Candidate = string;
 export type Election = 'caucus' | 'primary';
 
 export type CandidateResults = Record<Candidate, number>;
-export type PollingData = Record<State, Poll[]>;
+export type StatePollingData = Record<State, Poll[]>;
 export type AveragedPollingData = Record<State, CandidateResults>;
 export type Palette = Record<Candidate, ChromaStatic>;
 
@@ -31,5 +31,3 @@ export interface MapData {
   averagedPollingData: AveragedPollingData;
   palette: Palette;
 }
-
-export type ParquetSchema = Record<string, { type: string }>;

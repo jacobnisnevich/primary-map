@@ -1,0 +1,20 @@
+.poll-table {
+  margin: 10px auto;
+  font-size: 14px;
+  border: 2px solid #cccccc;
+  border-collapse: collapse;
+}
+
+.poll-table th {
+  border-bottom: 2px solid #cccccc;
+  padding: 10px;
+}
+
+.poll-table td {
+  text-align: center;
+  padding: 10px;
+}
+
+.poll-table td.winner {
+  background-color: #dddddd;
+}

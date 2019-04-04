@@ -3,7 +3,8 @@ import * as favicon from 'express-favicon';
 import * as path from 'path';
 import * as morgan from 'morgan';
 
-import { getMapData } from './map-data';
+import dataRoutes from './routes/data-routes';
+import colorRouter from './routes/color-routes';
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -12,15 +13,8 @@ app.use(morgan('tiny'));
 app.use(favicon(path.join(__dirname, '/../build/favicon.ico')));
 
 app.use('/static', express.static(path.join(__dirname, '/../static')));
-
-app.get('/map-data', async (req, res, next) => {
-  try {
-    const mapData = await getMapData();
-    res.send(mapData);
-  } catch (e) {
-    next(e);
-  }
-});
+app.use('/data', dataRoutes);
+app.use('/color', colorRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname));

@@ -1,27 +1,37 @@
 import * as path from 'path';
-import { DataFrame } from 'dataframe-js';
+import * as fs from 'fs';
+import { zipObject } from 'lodash';
 
 import * as p from '../types';
 
-import { expandPollingData, flattenPollingData } from './polling-operations';
+import { convertStatePollingDataToFlatPolls } from './data-shaping';
 
-const CSV_PATH = path.resolve(__dirname, '../data/polls.csv');
+export const CSV_PATH = path.resolve(__dirname, '../../polls.csv');
 
-export const writePollingDataToCSV = (pollingData: p.PollingData): void => {
-  const df = getDataFrameFromPollingData(pollingData);
-  df.toCSV(CSV_PATH);
+export const writePollingDataToCSV = (pollingData: p.StatePollingData): void => {
+  const csvData = buildCsvDataFromStatePollingData(pollingData);
+  fs.writeFileSync(CSV_PATH, csvData, 'utf8');
 };
 
-export const readDateFrameFromCSV = async (): Promise<any> => {
-  console.log(CSV_PATH);
-  const df = await DataFrame.fromCSV(CSV_PATH);
-  return df.toJSON();
+export const readPollingDataFromCSV = (): p.FlatPoll[] => {
+  const csvData = fs.readFileSync(CSV_PATH, 'utf8');
+  return buildPollsListFromCsvData(csvData);
 };
 
-const getDataFrameFromPollingData = (pollingData: p.PollingData): any => {
-  const expandedPollingData = expandPollingData(pollingData);
-  const flattenedPollingData = flattenPollingData(expandedPollingData);
-  const pollingDataColumnNames = Object.keys(flattenedPollingData[0]);
+const buildCsvDataFromStatePollingData = (pollingData: p.StatePollingData): string => {
+  const flattenedPollingData = convertStatePollingDataToFlatPolls(pollingData);
+  const columnHeaders = Object.keys(flattenedPollingData[0]);
 
-  return new DataFrame(flattenedPollingData, pollingDataColumnNames);
+  const headerString = `${columnHeaders.join()}\n`;
+  const dataString = flattenedPollingData
+    .map((flattenedPoll: p.FlatPoll): string => `${Object.values(flattenedPoll).join()}`)
+    .join(`\n`);
+
+  return headerString + dataString;
+};
+
+const buildPollsListFromCsvData = (csvData: string): p.FlatPoll[] => {
+  const csvDataRows = csvData.split('\n');
+  const csvDataHeaders = csvDataRows[0].split(',');
+  return csvDataRows.slice(1).map((csvDataRow: string) => zipObject(csvDataHeaders, csvDataRow.split(',')));
 };
