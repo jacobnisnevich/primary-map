@@ -22,9 +22,9 @@ router.get('/recent-polls', async (req, res, next) => {
   }
 });
 
-router.get('/raw', (req, res, next) => {
+router.get('/raw', async (req, res, next) => {
   try {
-    const data = getRawPolls();
+    const data = await getRawPolls();
     res.send({ data });
   } catch (e) {
     next(e);

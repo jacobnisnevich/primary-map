@@ -16,6 +16,7 @@ export const getMostRecentPollData = async (count: number): Promise<p.FlatPoll[]
   return mostRecentPollData;
 };
 
-export const getRawPolls = (): p.FlatPoll[] => {
+export const getRawPolls = async (): Promise<p.FlatPoll[]> => {
+  await getStatePollingData();
   return readPollingDataFromCSV();
 };
