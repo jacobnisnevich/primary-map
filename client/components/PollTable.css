@@ -15,7 +15,8 @@
   padding: 10px;
 }
 
-.poll-table td.winner {
+.poll-table td.winner,
+.poll-table tr:nth-child(even) td.winner {
   background-color: #dddddd;
 }
 
