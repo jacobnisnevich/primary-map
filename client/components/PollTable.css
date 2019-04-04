@@ -18,3 +18,7 @@
 .poll-table td.winner {
   background-color: #dddddd;
 }
+
+.poll-table tr:nth-child(even) td {
+  background-color: #eeeeee;
+}
