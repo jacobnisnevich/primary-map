@@ -66,7 +66,7 @@ const flattenPollingData = (expandedPollingData: p.ExpandedPoll[]): p.FlatPoll[]
       sample_size: expandedPoll.sampleSize,
       margin_of_error: expandedPoll.marginOfError,
       state: expandedPoll.state,
-      ...expandedPoll.candidateResults
+      ...insertDashesForUndefinedResults(expandedPoll.candidateResults)
     })
   );
 };
@@ -77,7 +77,7 @@ const expandStatePolls = (state: p.State, statePolls: p.Poll[], candidates: p.Ca
       if (statePoll.candidateResults[candidate]) {
         return statePoll.candidateResults[candidate];
       } else {
-        return 0;
+        return undefined;
       }
     });
     const candidateResults = zipObject(schematizeCandidateNames(candidates), stateCandidateResults);
@@ -90,4 +90,17 @@ const expandStatePolls = (state: p.State, statePolls: p.Poll[], candidates: p.Ca
 
     return expandedStatePoll;
   });
+};
+
+const insertDashesForUndefinedResults = (candidateResults: p.CandidateResults): Record<string, number | string> => {
+  return zipObject(
+    Object.keys(candidateResults),
+    Object.values(candidateResults).map((result: number) => {
+      if (result === undefined) {
+        return '-';
+      } else {
+        return result;
+      }
+    })
+  );
 };

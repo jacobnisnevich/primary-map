@@ -1,4 +1,4 @@
-import { isNaN, flatten, uniq, zipObject, sortBy } from 'lodash';
+import { isNaN, flatten, uniq, zipObject, sortBy, isEmpty, pick } from 'lodash';
 
 import * as p from '../types';
 
@@ -28,18 +28,21 @@ export const getMostRecentPolls = async (pollingData: p.StatePollingData, count:
 };
 
 const getUniqueCandidateListFromPolls = (statePolls: p.Poll[]) => {
-  const nonUniqueCandidateList = flatten(statePolls.map((poll: p.Poll) => Object.keys(poll.candidateResults)));
+  const nonUniqueCandidateList = flatten(
+    statePolls.map((poll: p.Poll): p.Candidate[] => Object.keys(poll.candidateResults))
+  );
   return uniq(nonUniqueCandidateList);
 };
 
 const computePollingAveragesForState = (polls: p.Poll[], pollCount: number): p.CandidateResults => {
   const applicablePolls = polls.slice(0, pollCount);
   const candidatesForState = getUniqueCandidateListFromPolls(applicablePolls);
-  const candidatePollingAverages = candidatesForState.map((candidate: p.Candidate) =>
-    computePollingAverageForCandidate(candidate, applicablePolls)
+  const pollingAverages = candidatesForState.map(
+    (candidate: p.Candidate): number => computePollingAverageForCandidate(candidate, applicablePolls)
   );
+  const candidatePollingAverages = zipObject(candidatesForState, pollingAverages);
 
-  return zipObject(candidatesForState, candidatePollingAverages);
+  return filterOutNullAndZeroCandidates(candidatePollingAverages);
 };
 
 const computePollingAverageForCandidate = (candidate: p.Candidate, polls: p.Poll[]): number => {
@@ -54,4 +57,11 @@ const computePollingAverageForCandidate = (candidate: p.Candidate, polls: p.Poll
   });
 
   return pollingTotalValue / pollingTotalCount;
+};
+
+const filterOutNullAndZeroCandidates = (candidateResults: p.CandidateResults): p.CandidateResults => {
+  const candidatesWithNonEmptyResults = Object.keys(candidateResults).filter(
+    (candidate: p.Candidate): boolean => !!candidateResults[candidate]
+  );
+  return pick(candidateResults, candidatesWithNonEmptyResults);
 };

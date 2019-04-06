@@ -14,7 +14,7 @@ export const getStatePollingData = async (): Promise<p.StatePollingData> => {
   } else {
     const pollingData = await loadWikipediaPollingData();
     writePollingDataToCSV(pollingData);
-    return pollingData;
+    return convertFlatPollsToStatePollingData(readPollingDataFromCSV());
   }
 };
 
