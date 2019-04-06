@@ -27,19 +27,6 @@ export const getColumnFormatter = columnType => {
     date: text => new Date(text).toLocaleDateString(),
     sample_size: text => text,
     margin_of_error: text => (text === '0' ? '-' : text),
-    state: text => text,
-    joe_biden: text => formatPercentageForTable(text),
-    cory_booker: text => formatPercentageForTable(text),
-    pete_buttigieg: text => formatPercentageForTable(text),
-    kamala_harris: text => formatPercentageForTable(text),
-    beto_o_rourke: text => formatPercentageForTable(text),
-    bernie_sanders: text => formatPercentageForTable(text),
-    elizabeth_warren: text => formatPercentageForTable(text),
-    oprah_winfrey: text => formatPercentageForTable(text),
-    sherrod_brown: text => formatPercentageForTable(text),
-    amy_klobuchar: text => formatPercentageForTable(text),
-    deval_patrick: text => formatPercentageForTable(text),
-    andrew_yang: text => formatPercentageForTable(text),
-    joe_kennedy_iii: text => formatPercentageForTable(text)
+    state: text => text
   }[columnType];
 };
