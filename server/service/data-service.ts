@@ -1,8 +1,8 @@
 import * as p from '../types';
 
-import { getStatePollingData } from '../data-utils/data-store';
+import { getStatePollingData, getNationalPollingData } from '../data-utils/data-store';
 import { computePollingAverages, getMostRecentPolls } from '../data-utils/polling-operations';
-import { readPollingDataFromCSV } from '../data-utils/csv-processing';
+import { readPollingDataFromCsv } from '../data-utils/csv-processing';
 
 export const getAveragedPollingData = async (): Promise<p.AveragedPollingData> => {
   const pollingData = await getStatePollingData();
@@ -16,7 +16,11 @@ export const getMostRecentPollData = async (count: number): Promise<p.FlatPoll[]
   return mostRecentPollData;
 };
 
-export const getRawPolls = async (): Promise<p.FlatPoll[]> => {
-  await getStatePollingData();
-  return readPollingDataFromCSV();
+export const getRawPolls = async (type: p.PollType): Promise<p.FlatPoll[]> => {
+  if (type === 'state') {
+    await getStatePollingData();
+  } else {
+    await getNationalPollingData();
+  }
+  return readPollingDataFromCsv(type);
 };

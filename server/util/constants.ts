@@ -57,3 +57,8 @@ export const STATE_NAMES: p.State[] = [
 
 export const CAUCUS: p.Election = 'caucus';
 export const PRIMARY: p.Election = 'primary';
+
+export const WIKIPEDIA_BASE_URL = 'https://en.wikipedia.org/wiki';
+export const STATE_POLLING_ROUTE = '/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
+export const NATIONAL_POLLING_ROUTE =
+  '/Nationwide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
