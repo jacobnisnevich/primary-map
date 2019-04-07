@@ -32,8 +32,8 @@ router.get('/raw/:type', async (req, res, next) => {
 
 router.get('/last-modified/:type', async (req, res, next) => {
   try {
-    const data = await getLastModified(req.params.type);
-    res.send({ data });
+    const lastModified = await getLastModified(req.params.type);
+    res.send({ lastModified });
   } catch (e) {
     next(e);
   }

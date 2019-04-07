@@ -3,6 +3,7 @@ import axios from 'axios';
 import { isEmpty } from 'lodash';
 import ReactTooltip from 'react-tooltip';
 import { Responsive, WidthProvider } from 'react-grid-layout';
+import moment from 'moment';
 
 import { formatPercentage, getColorForCandidate, fixMessedUpName } from './utils/common';
 
@@ -20,13 +21,16 @@ class App extends Component {
     palette: {},
     mostRecentStatePollData: [],
     mostRecentNationalPollData: [],
-    mounted: false
+    mounted: false,
+    lastModifiedState: undefined,
+    lastModifiedNational: undefined
   };
 
   async componentDidMount() {
     this.loadAveragePollingData();
     this.loadMostRecentStatePollData();
     this.loadMostRecentNationalPollData();
+    this.loadLastModifiedDate();
 
     this.setState({ mounted: true });
   }
@@ -48,16 +52,37 @@ class App extends Component {
   loadMostRecentStatePollData = async () => {
     const mostRecentStatePollDataResponse = await axios.get('/data/recent-polls/state?count=5');
     const mostRecentStatePollData = mostRecentStatePollDataResponse.data.mostRecentPollData;
+
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 300);
+
     this.setState({ mostRecentStatePollData });
   };
 
   loadMostRecentNationalPollData = async () => {
     const mostRecentNationalPollDataResponse = await axios.get('/data/recent-polls/national?count=5');
     const mostRecentNationalPollData = mostRecentNationalPollDataResponse.data.mostRecentPollData;
+
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 300);
+
     this.setState({ mostRecentNationalPollData });
   };
 
-  loadPalette = async () => {};
+  loadLastModifiedDate = async () => {
+    const lastModifiedDateStateResponse = await axios.get('/data/last-modified/state');
+    const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
+    const lastModifiedDateNationalResponse = await axios.get('/data/last-modified/state');
+    const lastModifiedNational = lastModifiedDateNationalResponse.data.lastModified;
+
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 300);
+
+    this.setState({ lastModifiedState, lastModifiedNational });
+  };
 
   getTooltipForState = stateName => {
     const { averagePollingData } = this.state;
@@ -173,7 +198,15 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div id="header">2020 Democratic Primary Overview</div>
+        <div id="header">
+          <div>2020 Democratic Primary Overview</div>
+          {this.state.lastModifiedNational && (
+            <div class="last-modified">
+              <div>{`State data last updated: ${moment(this.state.lastModifiedState).fromNow()}`}</div>
+              <div>{`National data last updated: ${moment(this.state.lastModifiedNational).fromNow()}`}</div>
+            </div>
+          )}
+        </div>
 
         <ResponsiveReactGridLayout
           className="layout"

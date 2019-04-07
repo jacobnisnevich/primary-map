@@ -9,6 +9,14 @@ body {
   padding: 24px;
   color: #cccccc;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+}
+
+#header .last-modified {
+  font-weight: 400;
+  font-size: 10px;
+  text-align: right;
 }
 
 #state-tooltip {
