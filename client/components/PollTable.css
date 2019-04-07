@@ -1,13 +1,27 @@
+.poll-table-container {
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .poll-table {
-  margin: 10px auto;
   font-size: 14px;
-  border: 2px solid #cccccc;
   border-collapse: collapse;
+  height: 100%;
+  width: 100%;
 }
 
 .poll-table th {
-  border-bottom: 2px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
   padding: 10px;
+}
+
+.poll-table td.grid-title {
+  text-align: left;
+  padding: 8px;
 }
 
 .poll-table td {

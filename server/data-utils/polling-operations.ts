@@ -2,8 +2,6 @@ import { isNaN, flatten, uniq, zipObject, sortBy, pick } from 'lodash';
 
 import * as p from '../types';
 
-import { convertStatePollingDataToFlatPolls } from './data-shaping';
-
 export const computePollingAverages = (
   pollingData: p.StatePollingData,
   pollCount: number
@@ -29,9 +27,8 @@ export const getUniqueCandidateListFromPolls = (statePolls: p.Poll[]) => {
   return uniq(nonUniqueCandidateList);
 };
 
-export const getMostRecentPolls = (pollingData: p.StatePollingData, count: number): p.FlatPoll[] => {
-  const flatPolls = convertStatePollingDataToFlatPolls(pollingData);
-  const recentPolls = sortPollsByDate(flatPolls).slice(0, count);
+export const getMostRecentPolls = <PollType>(polls: PollType[], count: number): PollType[] => {
+  const recentPolls = sortPollsByDate(polls).slice(0, count);
   return recentPolls;
 };
 

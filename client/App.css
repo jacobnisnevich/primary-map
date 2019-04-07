@@ -1,24 +1,14 @@
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 #header {
-  text-align: center;
-  font-size: 32px;
-  margin-top: 48px;
-}
-
-.subtitle {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 10px;
-}
-
-#primary-map,
-#recent-polls {
-  text-align: center;
+  font-weight: 100;
   font-size: 24px;
-  margin: 40px 0 20px;
+  background-color: #222222;
+  padding: 24px;
+  color: #cccccc;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 #state-tooltip {
@@ -32,4 +22,35 @@ body {
 #state-tooltip:after {
   border-bottom-color: #cccccc;
   border-top-color: #cccccc;
+}
+
+.state-tooltip-container {
+  border: 1px solid #cccccc;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.state-tooltip-title {
+  font-weight: bold;
+  text-align: center;
+  margin: 5px;
+}
+
+.state-tooltip-candidates {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.state-tooltip-candidate-item {
+  margin-right: 8px;
+}
+
+.grid-title {
+  width: 100%;
+  border-bottom: 1px solid #cccccc;
+  font-size: 16px;
+  padding: 8px;
+  box-sizing: border-box;
+  color: #666;
+  font-weight: 700;
 }

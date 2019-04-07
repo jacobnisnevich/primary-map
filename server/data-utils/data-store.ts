@@ -10,7 +10,7 @@ import {
   writeStatePollingDataToCsv,
   writeNationalPollingDataToCsv
 } from './csv-processing';
-import { convertFlatPollsToStatePollingData } from './data-shaping';
+import { convertFlatPollsToStatePollingData, convertFlatPollsToNationalPollingData } from './data-shaping';
 
 export const getStatePollingData = async (): Promise<p.StatePollingData> => {
   const type = 'state';
@@ -25,15 +25,15 @@ export const getStatePollingData = async (): Promise<p.StatePollingData> => {
   }
 };
 
-export const getNationalPollingData = async (): Promise<p.FlatPoll[]> => {
+export const getNationalPollingData = async (): Promise<p.Poll[]> => {
   const type = 'national';
 
   if (isCachedDataValid(type)) {
-    return readPollingDataFromCsv(type);
+    return convertFlatPollsToNationalPollingData(readPollingDataFromCsv(type));
   } else {
     const pollingData = await loadWikipediaNationalPollingData();
     writeNationalPollingDataToCsv(pollingData);
-    return pollingData;
+    return convertFlatPollsToNationalPollingData(readPollingDataFromCsv(type));
   }
 };
 
