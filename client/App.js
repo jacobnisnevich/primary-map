@@ -40,7 +40,7 @@ class App extends Component {
 
     setTimeout(() => {
       ReactTooltip.rebuild();
-    }, 100);
+    }, 300);
 
     this.setState({ averagePollingData, palette });
   };
