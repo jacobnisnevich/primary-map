@@ -1,29 +1,35 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { startCase, isEmpty, pick } from 'lodash';
+import { ScaleLoader } from 'react-spinners';
 
 import './PollTable.css';
 
 import { fixMessedUpName, getColumnFormatter, formatPercentageForTable } from '../utils/common';
 
 export default class PollTable extends Component {
-  filterOutEmptyColumns = mostRecentPollData => {
-    const columns = Object.keys(mostRecentPollData[0]);
+  filterOutEmptyColumns = polls => {
+    const columns = Object.keys(polls[0]);
 
     const validColumns = columns.filter(column => {
-      const valuesForColumn = mostRecentPollData.map(poll => poll[column]);
+      const valuesForColumn = polls.map(poll => poll[column]);
       return valuesForColumn.filter(value => value !== 0 && value !== '-').length > 0;
     });
 
-    return mostRecentPollData.map(poll => pick(poll, validColumns));
+    return polls.map(poll => pick(poll, validColumns));
   };
 
   getTableHead = () => {
-    const { mostRecentPollData } = this.props;
+    const { polls, title } = this.props;
 
-    const filteredPollData = this.filterOutEmptyColumns(mostRecentPollData);
+    const filteredPollData = this.filterOutEmptyColumns(polls);
 
     return (
       <thead>
+        <tr>
+          <td colSpan={Object.keys(filteredPollData[0]).length} className="grid-title">
+            {title}
+          </td>
+        </tr>
         <tr>
           {Object.keys(filteredPollData[0]).map((header, index) => (
             <th key={index}>{fixMessedUpName(startCase(header))}</th>
@@ -43,9 +49,11 @@ export default class PollTable extends Component {
   };
 
   getWinningCandidateIndices = poll => {
+    const { national } = this.props;
+
     const columns = Object.values(poll);
-    const marginOfError = parseFloat(columns[2]);
-    const candidatePollResults = columns.slice(4, columns.length - 1).map(columnValue => {
+    const marginOfError = parseFloat(columns[2]) || 0;
+    const candidatePollResults = columns.slice(national ? 3 : 4, columns.length - 1).map(columnValue => {
       if (columnValue === '-') {
         return 0;
       }
@@ -72,9 +80,9 @@ export default class PollTable extends Component {
   };
 
   getTableBody = () => {
-    const { mostRecentPollData } = this.props;
+    const { polls } = this.props;
 
-    const filteredPollData = this.filterOutEmptyColumns(mostRecentPollData);
+    const filteredPollData = this.filterOutEmptyColumns(polls);
 
     return (
       <tbody>
@@ -86,17 +94,19 @@ export default class PollTable extends Component {
   };
 
   render() {
-    const { mostRecentPollData } = this.props;
+    const { polls } = this.props;
 
-    if (!isEmpty(mostRecentPollData)) {
-      return (
-        <table className="poll-table">
-          {this.getTableHead()}
-          {this.getTableBody()}
-        </table>
-      );
-    } else {
-      return <Fragment />;
-    }
+    return (
+      <div className="poll-table-container" key={this.props.key} style={this.props.style}>
+        {!isEmpty(polls) ? (
+          <table className="poll-table">
+            {this.getTableHead()}
+            {this.getTableBody()}
+          </table>
+        ) : (
+          <ScaleLoader sizeUnit="px" size={150} color="#444444" loading={isEmpty(polls)} />
+        )}
+      </div>
+    );
   }
 }
