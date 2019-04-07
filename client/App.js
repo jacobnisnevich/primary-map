@@ -28,10 +28,6 @@ class App extends Component {
     this.loadMostRecentStatePollData();
     this.loadMostRecentNationalPollData();
 
-    setTimeout(() => {
-      ReactTooltip.rebuild();
-    }, 100);
-
     this.setState({ mounted: true });
   }
 
@@ -41,6 +37,10 @@ class App extends Component {
 
     const paletteResponse = await axios.get('/color/palette');
     const { palette } = paletteResponse.data;
+
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 100);
 
     this.setState({ averagePollingData, palette });
   };
