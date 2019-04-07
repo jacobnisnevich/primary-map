@@ -3,6 +3,7 @@ import { ChromaStatic } from 'chroma-js';
 export type State = string;
 export type Candidate = string;
 export type Election = 'caucus' | 'primary';
+export type PollType = 'state' | 'national';
 
 export type CandidateResults = Record<Candidate, number>;
 export type StatePollingData = Record<State, Poll[]>;
@@ -17,7 +18,7 @@ export interface Poll {
 }
 
 export interface ExpandedPoll extends Poll {
-  state: State;
+  state?: State;
 }
 
 export type FlatPoll = Record<string, any>;

@@ -1,10 +1,13 @@
-import { isNaN, flatten, uniq, zipObject, sortBy, isEmpty, pick } from 'lodash';
+import { isNaN, flatten, uniq, zipObject, sortBy, pick } from 'lodash';
 
 import * as p from '../types';
 
 import { convertStatePollingDataToFlatPolls } from './data-shaping';
 
-export const computePollingAverages = (pollingData: p.StatePollingData, pollCount: number) => {
+export const computePollingAverages = (
+  pollingData: p.StatePollingData,
+  pollCount: number
+): Record<p.State, p.CandidateResults> => {
   const averagedPollingData = {};
 
   Object.keys(pollingData).map((state: p.State) => {
@@ -19,23 +22,25 @@ export const getUniqueCandidateList = (pollingData: p.StatePollingData): p.Candi
   return getUniqueCandidateListFromPolls(statePolls);
 };
 
-export const getMostRecentPolls = async (pollingData: p.StatePollingData, count: number): Promise<p.FlatPoll[]> => {
-  const flatPolls = convertStatePollingDataToFlatPolls(pollingData);
-  const recentPolls = sortBy(flatPolls, poll => new Date(poll['date']))
-    .reverse()
-    .slice(0, count);
-  return recentPolls;
-};
-
-const getUniqueCandidateListFromPolls = (statePolls: p.Poll[]) => {
+export const getUniqueCandidateListFromPolls = (statePolls: p.Poll[]) => {
   const nonUniqueCandidateList = flatten(
     statePolls.map((poll: p.Poll): p.Candidate[] => Object.keys(poll.candidateResults))
   );
   return uniq(nonUniqueCandidateList);
 };
 
+export const getMostRecentPolls = (pollingData: p.StatePollingData, count: number): p.FlatPoll[] => {
+  const flatPolls = convertStatePollingDataToFlatPolls(pollingData);
+  const recentPolls = sortPollsByDate(flatPolls).slice(0, count);
+  return recentPolls;
+};
+
+const sortPollsByDate = <PollType>(polls: PollType[]): PollType[] => {
+  return sortBy(polls, poll => new Date(poll['date'])).reverse();
+};
+
 const computePollingAveragesForState = (polls: p.Poll[], pollCount: number): p.CandidateResults => {
-  const applicablePolls = polls.slice(0, pollCount);
+  const applicablePolls = sortPollsByDate(polls).slice(0, pollCount);
   const candidatesForState = getUniqueCandidateListFromPolls(applicablePolls);
   const pollingAverages = candidatesForState.map(
     (candidate: p.Candidate): number => computePollingAverageForCandidate(candidate, applicablePolls)

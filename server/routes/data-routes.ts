@@ -1,6 +1,7 @@
 import * as express from 'express';
 
 import { getAveragedPollingData, getMostRecentPollData, getRawPolls } from '../service/data-service';
+import { loadWikipediaNationalPollingData } from '../data-utils/wikipedia-parser';
 
 const router = express.Router();
 
@@ -22,9 +23,18 @@ router.get('/recent-polls', async (req, res, next) => {
   }
 });
 
-router.get('/raw', async (req, res, next) => {
+router.get('/raw/:type', async (req, res, next) => {
   try {
-    const data = await getRawPolls();
+    const data = await getRawPolls(req.params.type);
+    res.send({ data });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get('/national-polls', async (req, res, next) => {
+  try {
+    const data = await loadWikipediaNationalPollingData();
     res.send({ data });
   } catch (e) {
     next(e);
