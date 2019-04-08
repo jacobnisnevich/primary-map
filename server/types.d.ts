@@ -32,3 +32,8 @@ export interface MapData {
   averagedPollingData: AveragedPollingData;
   palette: Palette;
 }
+
+export interface TrendData {
+  candidateResults: CandidateResults[];
+  days: Date[];
+}

@@ -11,6 +11,7 @@ import PrimaryMap from './components/PrimaryMap';
 import Legend from './components/Legend';
 import PollTable from './components/PollTable';
 import PledgedDelegateScoreboard from './components/PledgedDelegateScoreboard';
+import NationalPollingTrends from './components/NationalPollingTrends';
 
 import './App.css';
 
@@ -23,6 +24,7 @@ class App extends Component {
     palette: {},
     mostRecentStatePollData: [],
     mostRecentNationalPollData: [],
+    nationalPollingTrendData: [],
     mounted: false,
     lastModifiedState: undefined,
     lastModifiedNational: undefined
@@ -37,16 +39,18 @@ class App extends Component {
     this.setState({ mounted: true });
   }
 
+  componentDidUpdate() {
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 100);
+  }
+
   loadAveragePollingData = async () => {
     const statePollingDataResponse = await axios.get('/data/state-polling-data');
     const { averagePollingData, weightedDelegateTotals } = statePollingDataResponse.data;
 
     const paletteResponse = await axios.get('/color/palette');
     const { palette } = paletteResponse.data;
-
-    setTimeout(() => {
-      ReactTooltip.rebuild();
-    }, 300);
 
     this.setState({ averagePollingData, weightedDelegateTotals, palette });
   };
@@ -55,10 +59,6 @@ class App extends Component {
     const mostRecentStatePollDataResponse = await axios.get('/data/recent-polls/state?count=5');
     const mostRecentStatePollData = mostRecentStatePollDataResponse.data.mostRecentPollData;
 
-    setTimeout(() => {
-      ReactTooltip.rebuild();
-    }, 300);
-
     this.setState({ mostRecentStatePollData });
   };
 
@@ -66,24 +66,17 @@ class App extends Component {
     const mostRecentNationalPollDataResponse = await axios.get('/data/recent-polls/national?count=5');
     const mostRecentNationalPollData = mostRecentNationalPollDataResponse.data.mostRecentPollData;
 
-    setTimeout(() => {
-      ReactTooltip.rebuild();
-    }, 300);
+    const nationalPollingTrendDataResponse = await axios.get('/data/national-trends');
+    const { nationalPollingTrendData } = nationalPollingTrendDataResponse.data;
 
-    this.setState({ mostRecentNationalPollData });
+    this.setState({ mostRecentNationalPollData, nationalPollingTrendData });
   };
 
   loadLastModifiedDate = async () => {
     const lastModifiedDateStateResponse = await axios.get('/data/last-modified/state');
     const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
-    const lastModifiedDateNationalResponse = await axios.get('/data/last-modified/state');
-    const lastModifiedNational = lastModifiedDateNationalResponse.data.lastModified;
 
-    setTimeout(() => {
-      ReactTooltip.rebuild();
-    }, 300);
-
-    this.setState({ lastModifiedState, lastModifiedNational });
+    this.setState({ lastModifiedState });
   };
 
   getTooltipForState = stateName => {
@@ -153,6 +146,13 @@ class App extends Component {
           i: 'recent-national-polls'
         },
         {
+          x: 0,
+          y: 12,
+          w: 5,
+          h: 5,
+          i: 'national-polling-trends'
+        },
+        {
           x: 5,
           y: 10,
           w: 4,
@@ -192,6 +192,13 @@ class App extends Component {
         {
           x: 0,
           y: 22,
+          w: 6,
+          h: 5,
+          i: 'national-polling-trends'
+        },
+        {
+          x: 0,
+          y: 27,
           w: 3,
           h: 5,
           i: 'pledged-delegate-scoreboard'
@@ -216,11 +223,10 @@ class App extends Component {
       <div>
         <div id="header">
           <div>2020 Democratic Primary Overview</div>
-          {this.state.lastModifiedNational && (
-            <div class="last-modified">
-              <div>{`State data last updated: ${moment(this.state.lastModifiedState).fromNow()}`}</div>
-              <div>{`National data last updated: ${moment(this.state.lastModifiedNational).fromNow()}`}</div>
-            </div>
+          {this.state.lastModifiedState && (
+            <div className="last-modified">{`Data last updated: ${moment(
+              this.state.lastModifiedState
+            ).fromNow()}`}</div>
           )}
         </div>
 
@@ -256,6 +262,11 @@ class App extends Component {
           <PledgedDelegateScoreboard
             key="pledged-delegate-scoreboard"
             weightedDelegateTotals={this.state.weightedDelegateTotals}
+            palette={this.state.palette}
+          />
+          <NationalPollingTrends
+            key="national-polling-trends"
+            nationalPollingTrendData={this.state.nationalPollingTrendData}
             palette={this.state.palette}
           />
         </ResponsiveReactGridLayout>

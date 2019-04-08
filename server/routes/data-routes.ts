@@ -5,7 +5,8 @@ import {
   getWeightedDelegateTotals,
   getMostRecentPollData,
   getRawPolls,
-  getLastModified
+  getLastModified,
+  getNationalPollingTrendData
 } from '../service/data-service';
 const router = express.Router();
 
@@ -37,10 +38,19 @@ router.get('/raw/:type', async (req, res, next) => {
   }
 });
 
-router.get('/last-modified/:type', async (req, res, next) => {
+router.get('/last-modified/:type', (req, res, next) => {
   try {
-    const lastModified = await getLastModified(req.params.type);
+    const lastModified = getLastModified(req.params.type);
     res.send({ lastModified });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get('/national-trends', async (req, res, next) => {
+  try {
+    const nationalPollingTrendData = await getNationalPollingTrendData();
+    res.send({ nationalPollingTrendData });
   } catch (e) {
     next(e);
   }

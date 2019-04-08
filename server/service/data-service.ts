@@ -1,10 +1,13 @@
+import { zipObject } from 'lodash';
+
 import * as p from '../types';
 
 import { getStatePollingData, getNationalPollingData, getLastModifiedTime } from '../data-utils/data-store';
 import {
   computePollingAverages,
   getMostRecentPolls,
-  getPledgedDelegateTotalsForCandidates
+  getPledgedDelegateTotalsForCandidates,
+  getNationalPollingAveragesForDays
 } from '../data-utils/polling-operations';
 import { readPollingDataFromCsv } from '../data-utils/csv-processing';
 import { convertStatePollingDataToFlatPolls, convertNationalPollingDataToFlatPolls } from '../data-utils/data-shaping';
@@ -23,11 +26,11 @@ export const getMostRecentPollData = async (count: number, type: p.PollType): Pr
   let polls = [];
 
   if (type === 'state') {
-    const pollingStateData = await getStatePollingData();
-    polls = convertStatePollingDataToFlatPolls(pollingStateData);
+    const statePollingData = await getStatePollingData();
+    polls = convertStatePollingDataToFlatPolls(statePollingData);
   } else {
-    const pollingNationalData = await getNationalPollingData();
-    polls = convertNationalPollingDataToFlatPolls(pollingNationalData);
+    const nationalPollingData = await getNationalPollingData();
+    polls = convertNationalPollingDataToFlatPolls(nationalPollingData);
   }
 
   const mostRecentPollData = getMostRecentPolls(polls, count);
@@ -44,6 +47,11 @@ export const getRawPolls = async (type: p.PollType): Promise<p.FlatPoll[]> => {
   return readPollingDataFromCsv(type);
 };
 
-export const getLastModified = async (type: p.PollType): Promise<Date> => {
+export const getLastModified = (type: p.PollType): Date => {
   return getLastModifiedTime(type);
+};
+
+export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
+  const nationalPollingData = await getNationalPollingData();
+  return getNationalPollingAveragesForDays(nationalPollingData, 5, 30);
 };

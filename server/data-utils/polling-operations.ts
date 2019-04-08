@@ -61,6 +61,35 @@ export const getMostRecentPolls = <PollType>(polls: PollType[], count: number): 
   return recentPolls;
 };
 
+export const getNationalPollingAveragesForDays = (
+  polls: p.Poll[],
+  pollCount: number,
+  numberOfDays: number
+): p.TrendData => {
+  const days = generateDateRange(numberOfDays);
+  const candidateResults = days.map(
+    (day: Date): p.CandidateResults => computingRollingPollingAverage(polls, pollCount, day)
+  );
+  return { candidateResults, days };
+};
+
+const computingRollingPollingAverage = (polls: p.Poll[], pollCount: number, startDate: Date): p.CandidateResults => {
+  const pollsBeforeDate = polls.filter((poll: p.Poll): boolean => poll.date < startDate);
+  return computePollingAveragesForState(pollsBeforeDate, pollCount);
+};
+
+const generateDateRange = (numberOfDays: number): Date[] => {
+  let days = [];
+
+  for (let i = 0; i < numberOfDays * 3; i += 3) {
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() - i);
+    days = [...days, nextDate];
+  }
+
+  return days;
+};
+
 const sortPollsByDate = <PollType>(polls: PollType[]): PollType[] => {
   return sortBy(polls, poll => new Date(poll['date'])).reverse();
 };
