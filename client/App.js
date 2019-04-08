@@ -27,7 +27,8 @@ class App extends Component {
     nationalPollingTrendData: [],
     mounted: false,
     lastModifiedState: undefined,
-    lastModifiedNational: undefined
+    lastModifiedNational: undefined,
+    renderId: 0
   };
 
   async componentDidMount() {
@@ -36,13 +37,18 @@ class App extends Component {
     this.loadMostRecentNationalPollData();
     this.loadLastModifiedDate();
 
+    setInterval(() => {
+      this.setState(prevState => ({ renderId: prevState.renderId }));
+      ReactTooltip.rebuild();
+    }, 15000);
+
     this.setState({ mounted: true });
   }
 
   componentDidUpdate() {
     setTimeout(() => {
       ReactTooltip.rebuild();
-    }, 100);
+    }, 1000);
   }
 
   loadAveragePollingData = async () => {
