@@ -1,12 +1,19 @@
 import * as express from 'express';
 
-import { getAveragedPollingData, getMostRecentPollData, getRawPolls, getLastModified } from '../service/data-service';
+import {
+  getAveragedPollingData,
+  getWeightedDelegateTotals,
+  getMostRecentPollData,
+  getRawPolls,
+  getLastModified
+} from '../service/data-service';
 const router = express.Router();
 
 router.get('/state-polling-data', async (req, res, next) => {
   try {
     const averagePollingData = await getAveragedPollingData();
-    res.send({ averagePollingData });
+    const weightedDelegateTotals = getWeightedDelegateTotals(averagePollingData);
+    res.send({ averagePollingData, weightedDelegateTotals });
   } catch (e) {
     next(e);
   }

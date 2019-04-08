@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as util from 'util';
+import * as path from 'path';
 
 import * as p from '../types';
 
@@ -40,6 +41,12 @@ export const getNationalPollingData = async (): Promise<p.Poll[]> => {
 export const getLastModifiedTime = (type: p.PollType): Date => {
   const fileStats = fs.statSync(CSV_PATH(type));
   return new Date(util.inspect(fileStats.mtime));
+};
+
+export const getPledgedDelegateJson = (): Record<string, number> => {
+  const pledgedDelegateJsonPath = path.resolve(__dirname, `../../static/delegates.json`);
+  const pledgedDelegateData = JSON.parse(fs.readFileSync(pledgedDelegateJsonPath, 'utf8'));
+  return pledgedDelegateData;
 };
 
 const isCachedDataValid = (type: p.PollType): boolean => {

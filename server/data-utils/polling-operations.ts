@@ -2,6 +2,8 @@ import { isNaN, flatten, uniq, zipObject, sortBy, pick } from 'lodash';
 
 import * as p from '../types';
 
+import { getPledgedDelegateJson } from './data-store';
+
 export const computePollingAverages = (
   pollingData: p.StatePollingData,
   pollCount: number
@@ -13,6 +15,33 @@ export const computePollingAverages = (
   });
 
   return averagedPollingData;
+};
+
+export const getPledgedDelegateTotalsForCandidates = (
+  averagedPollingData: p.AveragedPollingData
+): p.CandidateResults => {
+  const pledgedDelegateData = getPledgedDelegateJson();
+  const states = Object.keys(pledgedDelegateData);
+  const candidates = uniq(flatten(Object.values(averagedPollingData).map(Object.keys)));
+  const initialState = zipObject(candidates, new Array(candidates.length).fill(0));
+
+  return states.reduce((accumulatedDelegateTotals: p.CandidateResults, state: p.State) => {
+    const delegatesForState = pledgedDelegateData[state];
+    const pollingAverageForState = averagedPollingData[state];
+    const newDelegateTotals = {};
+
+    Object.keys(accumulatedDelegateTotals).map((candidate: p.Candidate) => {
+      if (pollingAverageForState) {
+        newDelegateTotals[candidate] =
+          accumulatedDelegateTotals[candidate] +
+          Math.round(delegatesForState * ((pollingAverageForState[candidate] || 0) / 100));
+      } else {
+        newDelegateTotals[candidate] = accumulatedDelegateTotals[candidate];
+      }
+    });
+
+    return newDelegateTotals;
+  }, initialState);
 };
 
 export const getUniqueCandidateList = (pollingData: p.StatePollingData): p.Candidate[] => {

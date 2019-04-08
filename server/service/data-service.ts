@@ -1,7 +1,11 @@
 import * as p from '../types';
 
 import { getStatePollingData, getNationalPollingData, getLastModifiedTime } from '../data-utils/data-store';
-import { computePollingAverages, getMostRecentPolls } from '../data-utils/polling-operations';
+import {
+  computePollingAverages,
+  getMostRecentPolls,
+  getPledgedDelegateTotalsForCandidates
+} from '../data-utils/polling-operations';
 import { readPollingDataFromCsv } from '../data-utils/csv-processing';
 import { convertStatePollingDataToFlatPolls, convertNationalPollingDataToFlatPolls } from '../data-utils/data-shaping';
 
@@ -9,6 +13,10 @@ export const getAveragedPollingData = async (): Promise<p.AveragedPollingData> =
   const pollingData = await getStatePollingData();
   const averagedPollingData = computePollingAverages(pollingData, 5);
   return averagedPollingData;
+};
+
+export const getWeightedDelegateTotals = (averagedPollingData: p.AveragedPollingData): p.CandidateResults => {
+  return getPledgedDelegateTotalsForCandidates(averagedPollingData);
 };
 
 export const getMostRecentPollData = async (count: number, type: p.PollType): Promise<p.FlatPoll[]> => {

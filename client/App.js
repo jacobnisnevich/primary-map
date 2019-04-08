@@ -10,6 +10,7 @@ import { formatPercentage, getColorForCandidate, fixMessedUpName } from './utils
 import PrimaryMap from './components/PrimaryMap';
 import Legend from './components/Legend';
 import PollTable from './components/PollTable';
+import PledgedDelegateScoreboard from './components/PledgedDelegateScoreboard';
 
 import './App.css';
 
@@ -18,6 +19,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 class App extends Component {
   state = {
     averagePollingData: {},
+    weightedDelegateTotals: {},
     palette: {},
     mostRecentStatePollData: [],
     mostRecentNationalPollData: [],
@@ -37,7 +39,7 @@ class App extends Component {
 
   loadAveragePollingData = async () => {
     const statePollingDataResponse = await axios.get('/data/state-polling-data');
-    const { averagePollingData } = statePollingDataResponse.data;
+    const { averagePollingData, weightedDelegateTotals } = statePollingDataResponse.data;
 
     const paletteResponse = await axios.get('/color/palette');
     const { palette } = paletteResponse.data;
@@ -46,7 +48,7 @@ class App extends Component {
       ReactTooltip.rebuild();
     }, 300);
 
-    this.setState({ averagePollingData, palette });
+    this.setState({ averagePollingData, weightedDelegateTotals, palette });
   };
 
   loadMostRecentStatePollData = async () => {
@@ -149,6 +151,13 @@ class App extends Component {
           w: 7,
           h: 5,
           i: 'recent-national-polls'
+        },
+        {
+          x: 5,
+          y: 10,
+          w: 4,
+          h: 5,
+          i: 'pledged-delegate-scoreboard'
         }
       ],
       md: [
@@ -179,6 +188,13 @@ class App extends Component {
           w: 6,
           h: 5,
           i: 'recent-national-polls'
+        },
+        {
+          x: 0,
+          y: 22,
+          w: 3,
+          h: 5,
+          i: 'pledged-delegate-scoreboard'
         }
       ]
     };
@@ -236,6 +252,11 @@ class App extends Component {
             key="recent-national-polls"
             polls={this.state.mostRecentNationalPollData}
             title="Most Recent National Primary Polls"
+          />
+          <PledgedDelegateScoreboard
+            key="pledged-delegate-scoreboard"
+            weightedDelegateTotals={this.state.weightedDelegateTotals}
+            palette={this.state.palette}
           />
         </ResponsiveReactGridLayout>
 
