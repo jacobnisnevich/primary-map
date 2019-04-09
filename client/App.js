@@ -14,6 +14,7 @@ import PledgedDelegateScoreboard from './components/PledgedDelegateScoreboard';
 import NationalPollingTrends from './components/NationalPollingTrends';
 
 import './App.css';
+import githubIcon from './img/github.png';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -229,11 +230,16 @@ class App extends Component {
       <div>
         <div id="header">
           <div>2020 Democratic Primary Overview</div>
-          {this.state.lastModifiedState && (
-            <div className="last-modified">{`Data last updated: ${moment(
-              this.state.lastModifiedState
-            ).fromNow()}`}</div>
-          )}
+          <div className="header-right">
+            {this.state.lastModifiedState && (
+              <div className="last-modified">{`Data last updated: ${moment(
+                this.state.lastModifiedState
+              ).fromNow()}`}</div>
+            )}
+            <a href="http://github.com/jacobnisnevich/primary-map" target="_blank" rel="noopener noreferrer">
+              <img src={githubIcon} alt="Github" />
+            </a>
+          </div>
         </div>
 
         <ResponsiveReactGridLayout

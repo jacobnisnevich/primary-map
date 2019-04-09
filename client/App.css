@@ -21,6 +21,23 @@ body {
   align-items: center;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right img {
+  opacity: 1;
+  margin-left: 16px;
+  transition: opacity 50ms ease-in-out;
+}
+
+.header-right img:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 50ms ease-in-out;
+}
+
 #state-tooltip {
   background-color: white;
   color: black;
