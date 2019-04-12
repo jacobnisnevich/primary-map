@@ -27,6 +27,6 @@ export const getColumnFormatter = columnType => {
     date: text => new Date(text).toLocaleDateString(),
     sample_size: text => text,
     margin_of_error: text => (text === '0' ? '-' : text),
-    state: text => text.replace('New Hampshire', 'N. Hampshire')
+    state: text => text
   }[columnType];
 };

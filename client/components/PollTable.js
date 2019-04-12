@@ -42,7 +42,7 @@ export default class PollTable extends Component {
   getTableCell = (poll, column, columnIndex, isWinningCandidate) => {
     const columnFormatter = getColumnFormatter(column) || formatPercentageForTable;
     return (
-      <td key={columnIndex} className={isWinningCandidate ? 'winner' : ''}>
+      <td key={columnIndex} nowrap className={isWinningCandidate ? 'winner' : ''}>
         {columnFormatter(poll[column])}
       </td>
     );
