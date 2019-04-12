@@ -27,6 +27,7 @@
 .poll-table td {
   text-align: center;
   padding: 10px;
+  white-space: nowrap;
 }
 
 .poll-table td.winner {
