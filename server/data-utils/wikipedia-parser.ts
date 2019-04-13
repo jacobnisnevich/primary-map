@@ -80,8 +80,7 @@ const getStatePollingData = (stateName: string, $: CheerioSelector): p.Poll[] =>
 const getStatePollsFromTable = (headerTextElement: CheerioElement, $: CheerioSelector): p.Poll[] => {
   const tableElement = $(headerTextElement)
     .parent()
-    .next()
-    .next();
+    .nextAll('.wikitable')[0];
   const tableRows = $(tableElement).find('tr');
   const tableHeaderElement = $(tableRows[0]);
 
