@@ -29,9 +29,9 @@ router.get('/recent-polls/:type', async (req, res, next) => {
   }
 });
 
-router.get('/raw/:type', async (req, res, next) => {
+router.get('/raw', async (req, res, next) => {
   try {
-    const data = await getRawPolls(req.params.type);
+    const data = await getRawPolls(req.query.type, req.query.forceRefresh);
     res.send({ data });
   } catch (e) {
     next(e);

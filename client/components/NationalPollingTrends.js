@@ -34,7 +34,7 @@ export default class NationalPollingTrends extends Component {
     }
 
     return (
-      <div className="national-polling-trends-container" key={this.props.key} style={this.props.style}>
+      <div className="national-polling-trends-container widget" key={this.props.key} style={this.props.style}>
         {!isEmpty(palette) && !isEmpty(nationalPollingTrendData) ? (
           <Fragment>
             <div className="grid-title">National Polling over Time</div>

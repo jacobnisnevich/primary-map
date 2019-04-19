@@ -136,6 +136,7 @@ const backFillSubPollData = (polls: p.Poll[]): p.Poll[] => {
       const previousValidPoll = getClosestValidPoll(polls, i);
       backFilledPolls.push({
         ...currentPoll,
+        pollingSource: previousValidPoll.pollingSource,
         date: previousValidPoll.date,
         sampleSize: previousValidPoll.sampleSize,
         marginOfError: previousValidPoll.marginOfError
@@ -160,6 +161,7 @@ const getPollFromTableDataRow = (
   year?: string
 ): p.Poll => {
   let candidateResults = {};
+  let pollingSource = undefined;
   let date = undefined;
   let sampleSize = undefined;
   let marginOfError = undefined;
@@ -172,7 +174,9 @@ const getPollFromTableDataRow = (
     const cellText = $(tableDataCell).text();
 
     if (!isSubPoll && index < 4) {
-      if (index === 1) {
+      if (index === 0) {
+        pollingSource = cleanUpPollingSourceValue(cellText);
+      } else if (index === 1) {
         date = cleanUpDateValue(cellText, year);
       } else if (index === 2) {
         sampleSize = cleanUpSampleSizeValue(cellText);
@@ -189,7 +193,11 @@ const getPollFromTableDataRow = (
     }
   });
 
-  return { date, sampleSize, marginOfError, candidateResults };
+  return { pollingSource, date, sampleSize, marginOfError, candidateResults };
+};
+
+const cleanUpPollingSourceValue = (pollingSourceValue: string): string => {
+  return pollingSourceValue.trim().replace(/\[[^\]]*]/, '');
 };
 
 const cleanUpDateValue = (dateValue: string, year?: string): Date => {

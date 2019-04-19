@@ -11,6 +11,7 @@ export type AveragedPollingData = Record<State, CandidateResults>;
 export type Palette = Record<Candidate, ChromaStatic>;
 
 export interface Poll {
+  pollingSource?: string;
   date?: Date;
   sampleSize?: number;
   marginOfError?: number;

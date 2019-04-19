@@ -13,7 +13,7 @@ import { readPollingDataFromCsv } from '../data-utils/csv-processing';
 import { convertStatePollingDataToFlatPolls, convertNationalPollingDataToFlatPolls } from '../data-utils/data-shaping';
 
 export const getAveragedPollingData = async (): Promise<p.AveragedPollingData> => {
-  const pollingData = await getStatePollingData();
+  const pollingData = await getStatePollingData(false);
   const averagedPollingData = computePollingAverages(pollingData, 5);
   return averagedPollingData;
 };
@@ -26,10 +26,10 @@ export const getMostRecentPollData = async (count: number, type: p.PollType): Pr
   let polls = [];
 
   if (type === 'state') {
-    const statePollingData = await getStatePollingData();
+    const statePollingData = await getStatePollingData(false);
     polls = convertStatePollingDataToFlatPolls(statePollingData);
   } else {
-    const nationalPollingData = await getNationalPollingData();
+    const nationalPollingData = await getNationalPollingData(false);
     polls = convertNationalPollingDataToFlatPolls(nationalPollingData);
   }
 
@@ -38,11 +38,11 @@ export const getMostRecentPollData = async (count: number, type: p.PollType): Pr
   return mostRecentPollData;
 };
 
-export const getRawPolls = async (type: p.PollType): Promise<p.FlatPoll[]> => {
+export const getRawPolls = async (type: p.PollType, forceRefresh: boolean): Promise<p.FlatPoll[]> => {
   if (type === 'state') {
-    await getStatePollingData();
+    await getStatePollingData(forceRefresh);
   } else {
-    await getNationalPollingData();
+    await getNationalPollingData(forceRefresh);
   }
   return readPollingDataFromCsv(type);
 };
@@ -52,6 +52,6 @@ export const getLastModified = (type: p.PollType): Date => {
 };
 
 export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
-  const nationalPollingData = await getNationalPollingData();
+  const nationalPollingData = await getNationalPollingData(false);
   return getNationalPollingAveragesForDays(nationalPollingData, 5, 30);
 };

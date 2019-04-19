@@ -14,6 +14,11 @@
   width: 100%;
 }
 
+.poll-link {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
 .poll-table th {
   border-bottom: 1px solid #cccccc;
   padding: 10px;
