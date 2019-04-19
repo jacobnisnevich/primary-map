@@ -4,7 +4,7 @@ import { getStatePollingData } from '../data-utils/data-store';
 import { getPalette } from '../util/colors';
 
 export const getMapPalette = async (): Promise<p.Palette> => {
-  const pollingData = await getStatePollingData();
+  const pollingData = await getStatePollingData(false);
   const palette = getPalette(pollingData);
   return palette;
 };
