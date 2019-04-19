@@ -49,16 +49,27 @@ export default class PollTable extends Component {
   };
 
   getTableHead = () => {
-    const { polls, title } = this.props;
+    const { polls, title, national } = this.props;
 
     const filteredPollData = this.filterOutEmptyColumns(polls);
     const columns = this.getColumns(filteredPollData);
+
+    const link = national
+      ? 'https://en.wikipedia.org/wiki/Nationwide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries'
+      : 'https://en.wikipedia.org/wiki/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
 
     return (
       <thead>
         <tr>
           <td colSpan={columns.length} className="grid-title">
-            {title}
+            <span>{title}</span>
+            <span className="poll-link">
+              (
+              <a href={link} target="_blank" rel="noopener noreferrer">
+                source
+              </a>
+              )
+            </span>
           </td>
         </tr>
         <tr>
