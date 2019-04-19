@@ -13,10 +13,10 @@ import {
 } from './csv-processing';
 import { convertFlatPollsToStatePollingData, convertFlatPollsToNationalPollingData } from './data-shaping';
 
-export const getStatePollingData = async (): Promise<p.StatePollingData> => {
+export const getStatePollingData = async (forceRefresh: boolean): Promise<p.StatePollingData> => {
   const type = 'state';
 
-  if (isCachedDataValid(type)) {
+  if (isCachedDataValid(type) && !forceRefresh) {
     const flatPollingData = readPollingDataFromCsv(type);
     return convertFlatPollsToStatePollingData(flatPollingData);
   } else {
@@ -26,10 +26,10 @@ export const getStatePollingData = async (): Promise<p.StatePollingData> => {
   }
 };
 
-export const getNationalPollingData = async (): Promise<p.Poll[]> => {
+export const getNationalPollingData = async (forceRefresh: boolean): Promise<p.Poll[]> => {
   const type = 'national';
 
-  if (isCachedDataValid(type)) {
+  if (isCachedDataValid(type) && !forceRefresh) {
     return convertFlatPollsToNationalPollingData(readPollingDataFromCsv(type));
   } else {
     const pollingData = await loadWikipediaNationalPollingData();

@@ -45,6 +45,7 @@ const getPollsForStates = (states: p.State[], polls: p.FlatPoll[]): p.StatePolli
 const unexpandPoll = (poll: p.FlatPoll): p.Poll => {
   const candidateResults = getCandidateResultsFromFlatPoll(poll);
   return {
+    pollingSource: poll.polling_source,
     date: new Date(poll.date),
     sampleSize: poll.sample_size,
     marginOfError: poll.margin_of_error,
@@ -53,7 +54,7 @@ const unexpandPoll = (poll: p.FlatPoll): p.Poll => {
 };
 
 const getCandidateResultsFromFlatPoll = (poll: p.FlatPoll): p.CandidateResults => {
-  const nonCandidateRows = ['date', 'sample_size', 'margin_of_error', 'state'];
+  const nonCandidateRows = ['polling_source', 'date', 'sample_size', 'margin_of_error', 'state'];
   const candidateData = omit(poll, nonCandidateRows);
   const candidateNames = unschematizeCandidateNames(Object.keys(candidateData));
   const candidatePollValues = Object.values(candidateData).map(parseFloat);
@@ -73,6 +74,7 @@ const expandPollingData = (pollingData: p.StatePollingData): p.ExpandedPoll[] =>
 const flattenPollingData = (expandedPollingData: p.ExpandedPoll[], candidateList): p.FlatPoll[] => {
   return expandedPollingData.map(
     (expandedPoll: p.ExpandedPoll): p.FlatPoll => ({
+      polling_source: expandedPoll.pollingSource,
       date: expandedPoll.date,
       sample_size: expandedPoll.sampleSize || '-',
       margin_of_error: expandedPoll.marginOfError || '-',

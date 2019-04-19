@@ -22,8 +22,26 @@ export const fixMessedUpName = candidateName => {
   }
 };
 
+export const formatColumnHeader = columnHeader => {
+  if (columnHeader === 'Polling Source') {
+    return 'Pollster';
+  } else if (columnHeader === 'Date') {
+    return 'Poll Date';
+  } else if (columnHeader === 'Margin Of Error') {
+    return 'MoE';
+  } else if (columnHeader === 'Sample Size') {
+    return 'Sample';
+  } else if (columnHeader === 'State') {
+    return 'State';
+  } else {
+    const fixedName = fixMessedUpName(columnHeader);
+    return fixedName.split(' ')[1];
+  }
+};
+
 export const getColumnFormatter = columnType => {
   return {
+    polling_source: text => text,
     date: text => new Date(text).toLocaleDateString(),
     sample_size: text => text,
     margin_of_error: text => (text === '0' ? '-' : text),

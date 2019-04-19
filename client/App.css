@@ -1,13 +1,14 @@
 body {
   font-family: 'Roboto', sans-serif;
+  background-color: #eeeeee;
 }
 
 #header {
   font-weight: 100;
-  font-size: 24px;
+  font-size: 32px;
   background-color: #222222;
   padding: 24px;
-  color: #cccccc;
+  color: #ffffff;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
@@ -36,6 +37,10 @@ body {
   opacity: 0.5;
   cursor: pointer;
   transition: opacity 50ms ease-in-out;
+}
+
+.widget {
+  background-color: #ffffff;
 }
 
 #state-tooltip {

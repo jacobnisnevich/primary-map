@@ -9,7 +9,7 @@ export default class Legend extends Component {
     const { palette, getCandidateColorForLegend } = this.props;
 
     return (
-      <div className="legend-container" key={this.props.key} style={this.props.style}>
+      <div className="legend-container widget" key={this.props.key} style={this.props.style}>
         {!isEmpty(palette) ? (
           <Fragment>
             <div className="grid-title">Map Legend</div>

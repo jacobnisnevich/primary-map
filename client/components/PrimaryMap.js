@@ -41,7 +41,7 @@ export default class PrimaryMap extends Component {
     const { averagePollingData } = this.props;
 
     return (
-      <div className="primary-map-container" key={this.props.key} style={this.props.style}>
+      <div className="primary-map-container widget" key={this.props.key} style={this.props.style}>
         {!isEmpty(averagePollingData) ? (
           <Fragment>
             <div className="grid-title">Primary Polling Average Map</div>

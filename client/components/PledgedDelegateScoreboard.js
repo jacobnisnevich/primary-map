@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { isEmpty, sortBy } from 'lodash';
 import { ScaleLoader } from 'react-spinners';
 
-import { getColorForCandidate } from '../utils/common';
+import { getColorForCandidate, fixMessedUpName } from '../utils/common';
 
 import './PledgedDelegateScoreboard.css';
 
@@ -11,12 +11,12 @@ export default class PledgedDelegateScoreboard extends Component {
     const { weightedDelegateTotals, palette } = this.props;
 
     const candidateNames = Object.keys(weightedDelegateTotals);
-    const topSixTotals = Object.values(weightedDelegateTotals)
+    const topTotals = Object.values(weightedDelegateTotals)
       .sort((a, b) => b - a)
-      .slice(0, 6);
+      .slice(0, 8);
 
     const sortedTopCandidates = sortBy(
-      candidateNames.filter(candidate => topSixTotals.includes(weightedDelegateTotals[candidate])),
+      candidateNames.filter(candidate => topTotals.includes(weightedDelegateTotals[candidate])),
       candidate => weightedDelegateTotals[candidate]
     ).reverse();
 
@@ -25,7 +25,7 @@ export default class PledgedDelegateScoreboard extends Component {
     return sortedTopCandidates.map((candidate, index) => {
       return (
         <div key={index} className="pledged-delegate-entry">
-          <div className="name">{candidate}</div>
+          <div className="name">{fixMessedUpName(candidate)}</div>
           <div className="delegates">{weightedDelegateTotals[candidate]}</div>
           <div
             className="bar"
@@ -43,7 +43,7 @@ export default class PledgedDelegateScoreboard extends Component {
     const { weightedDelegateTotals, palette } = this.props;
 
     return (
-      <div className="pledged-delegates-container" key={this.props.key} style={this.props.style}>
+      <div className="pledged-delegates-container widget" key={this.props.key} style={this.props.style}>
         {!isEmpty(weightedDelegateTotals) && !isEmpty(palette) ? (
           <Fragment>
             <div className="grid-title">Estimated Pledged Delegates</div>

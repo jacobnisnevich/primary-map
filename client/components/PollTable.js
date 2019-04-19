@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { startCase, isEmpty, pick } from 'lodash';
+import { startCase, isEmpty, pick, sum, zipObject } from 'lodash';
 import { ScaleLoader } from 'react-spinners';
 
 import './PollTable.css';
 
-import { fixMessedUpName, getColumnFormatter, formatPercentageForTable } from '../utils/common';
+import { formatColumnHeader, getColumnFormatter, formatPercentageForTable } from '../utils/common';
 
 export default class PollTable extends Component {
+  getMaxCandidatesPerTable = () => {
+    return this.props.national ? 7 : 6;
+  };
+
+  getCandidateStartIndex = () => {
+    return this.props.national ? 4 : 5;
+  };
+
   filterOutEmptyColumns = polls => {
     const columns = Object.keys(polls[0]);
 
@@ -18,21 +26,44 @@ export default class PollTable extends Component {
     return polls.map(poll => pick(poll, validColumns));
   };
 
+  getColumns = polls => {
+    const unfilteredColumns = Object.keys(polls[0]);
+    const sortedCandidates = this.sortCandidatesByAverageScore(polls).slice(0, this.getMaxCandidatesPerTable());
+
+    const nonCandidateColumns = unfilteredColumns.slice(0, this.getCandidateStartIndex());
+    const candidateColumns = sortedCandidates.slice(0, this.getMaxCandidatesPerTable());
+
+    return [...nonCandidateColumns, ...candidateColumns];
+  };
+
+  sortCandidatesByAverageScore = polls => {
+    const columns = Object.keys(polls[0]);
+    const candidates = columns.slice(this.getCandidateStartIndex(), columns.length);
+    const scores = candidates.map(candidate => {
+      return sum(polls.map(poll => (poll[candidate] === '-' ? 0 : poll[candidate])));
+    });
+
+    const candidateScores = zipObject(candidates, scores);
+
+    return candidates.sort((a, b) => candidateScores[b] - candidateScores[a]);
+  };
+
   getTableHead = () => {
     const { polls, title } = this.props;
 
     const filteredPollData = this.filterOutEmptyColumns(polls);
+    const columns = this.getColumns(filteredPollData);
 
     return (
       <thead>
         <tr>
-          <td colSpan={Object.keys(filteredPollData[0]).length} className="grid-title">
+          <td colSpan={columns.length} className="grid-title">
             {title}
           </td>
         </tr>
         <tr>
-          {Object.keys(filteredPollData[0]).map((header, index) => (
-            <th key={index}>{fixMessedUpName(startCase(header))}</th>
+          {columns.map((header, index) => (
+            <th key={index}>{formatColumnHeader(startCase(header))}</th>
           ))}
         </tr>
       </thead>
@@ -48,12 +79,10 @@ export default class PollTable extends Component {
     );
   };
 
-  getWinningCandidateIndices = poll => {
-    const { national } = this.props;
-
-    const columns = Object.values(poll);
+  getWinningCandidateIndices = (poll, columns) => {
     const marginOfError = parseFloat(columns[2]) || 0;
-    const candidatePollResults = columns.slice(national ? 3 : 4, columns.length - 1).map(columnValue => {
+    const columnValues = columns.map(column => poll[column]);
+    const candidatePollResults = columnValues.slice(this.getCandidateStartIndex(), columns.length).map(columnValue => {
       if (columnValue === '-') {
         return 0;
       }
@@ -62,17 +91,17 @@ export default class PollTable extends Component {
     const highestPollResult = Math.max(...candidatePollResults);
     const winningCandidateIndices = candidatePollResults
       .filter(result => result + marginOfError >= highestPollResult)
-      .map(result => columns.indexOf(result));
+      .map(result => columnValues.indexOf(result));
 
     return winningCandidateIndices;
   };
 
-  getTableRow = (poll, rowIndex) => {
-    const winningCandidateIndices = this.getWinningCandidateIndices(poll);
+  getTableRow = (poll, rowIndex, columns) => {
+    const winningCandidateIndices = this.getWinningCandidateIndices(poll, columns);
 
     return (
       <tr key={rowIndex}>
-        {Object.keys(poll).map((column, columnIndex) =>
+        {columns.map((column, columnIndex) =>
           this.getTableCell(poll, column, columnIndex, winningCandidateIndices.includes(columnIndex))
         )}
       </tr>
@@ -83,11 +112,12 @@ export default class PollTable extends Component {
     const { polls } = this.props;
 
     const filteredPollData = this.filterOutEmptyColumns(polls);
+    const columns = this.getColumns(filteredPollData);
 
     return (
       <tbody>
         {filteredPollData.map((poll, rowIndex) => {
-          return this.getTableRow(poll, rowIndex);
+          return this.getTableRow(poll, rowIndex, columns);
         })}
       </tbody>
     );
@@ -97,7 +127,7 @@ export default class PollTable extends Component {
     const { polls } = this.props;
 
     return (
-      <div className="poll-table-container" key={this.props.key} style={this.props.style}>
+      <div className="poll-table-container widget" key={this.props.key} style={this.props.style}>
         {!isEmpty(polls) ? (
           <table className="poll-table">
             {this.getTableHead()}
