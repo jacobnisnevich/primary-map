@@ -9,6 +9,7 @@ import {
   getPledgedDelegateTotalsForCandidates,
   getNationalPollingAveragesForDays
 } from '../data-utils/polling-operations';
+import { getFinancialDataForCandidates } from '../data-utils/fec-data';
 import { readPollingDataFromCsv } from '../data-utils/csv-processing';
 import { convertStatePollingDataToFlatPolls, convertNationalPollingDataToFlatPolls } from '../data-utils/data-shaping';
 
@@ -54,4 +55,8 @@ export const getLastModified = (type: p.PollType): Date => {
 export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
   const nationalPollingData = await getNationalPollingData(false);
   return getNationalPollingAveragesForDays(nationalPollingData, 5, 30);
+};
+
+export const getCandidateFinancialData = async (): Promise<p.CandidateFinancialData> => {
+  return await getFinancialDataForCandidates();
 };

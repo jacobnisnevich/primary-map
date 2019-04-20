@@ -41,6 +41,13 @@ export const gridLayout = {
       w: 4,
       h: 7,
       i: 'pledged-delegate-scoreboard'
+    },
+    {
+      x: 9,
+      y: 10,
+      w: 3,
+      h: 7,
+      i: 'candidate-financials'
     }
   ],
   md: [
@@ -85,6 +92,13 @@ export const gridLayout = {
       w: 3,
       h: 7,
       i: 'pledged-delegate-scoreboard'
+    },
+    {
+      x: 3,
+      y: 27,
+      w: 3,
+      h: 7,
+      i: 'candidate-financials'
     }
   ]
 };

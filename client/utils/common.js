@@ -48,3 +48,7 @@ export const getColumnFormatter = columnType => {
     state: text => text
   }[columnType];
 };
+
+export const formatCurrency = number => {
+  return `$${number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+};

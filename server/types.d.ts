@@ -38,3 +38,10 @@ export interface TrendData {
   candidateResults: CandidateResults[];
   days: Date[];
 }
+
+export type CandidateFinancialData = Record<Candidate, FinancialData>;
+
+export interface FinancialData {
+  raised: number;
+  spent: number;
+}
