@@ -3,11 +3,10 @@ import * as express from 'express';
 import {
   getAveragedPollingData,
   getWeightedDelegateTotals,
-  getMostRecentPollData,
-  getRawPolls,
   getLastModified,
   getNationalPollingTrendData,
-  getCandidateFinancialData
+  getCandidateFinancialData,
+  getFilteredPolls
 } from '../service/data-service';
 const router = express.Router();
 
@@ -21,27 +20,18 @@ router.get('/state-polling-data', async (req, res, next) => {
   }
 });
 
-router.get('/recent-polls/:type', async (req, res, next) => {
+router.post('/polls', async (req, res, next) => {
   try {
-    const mostRecentPollData = await getMostRecentPollData(req.query.count, req.params.type);
-    res.send({ mostRecentPollData });
+    const polls = await getFilteredPolls(req.body, req.query.forceRefresh);
+    res.send({ polls });
   } catch (e) {
     next(e);
   }
 });
 
-router.get('/raw', async (req, res, next) => {
+router.get('/last-modified', (req, res, next) => {
   try {
-    const data = await getRawPolls(req.query.type, req.query.forceRefresh);
-    res.send({ data });
-  } catch (e) {
-    next(e);
-  }
-});
-
-router.get('/last-modified/:type', (req, res, next) => {
-  try {
-    const lastModified = getLastModified(req.params.type);
+    const lastModified = getLastModified();
     res.send({ lastModified });
   } catch (e) {
     next(e);

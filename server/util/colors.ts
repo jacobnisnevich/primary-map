@@ -3,10 +3,10 @@ import { zipObject } from 'lodash';
 
 import * as p from '../types';
 
-import { getUniqueCandidateList } from '../data-utils/polling-operations';
+import { getUniqueCandidateListFromPolls } from '../data-utils/polling-operations';
 
-export const getPalette = (pollingData: p.StatePollingData): p.Palette => {
-  const distinctCandidateNames = getUniqueCandidateList(pollingData);
+export const getPalette = (statePolls: p.Poll[]): p.Palette => {
+  const distinctCandidateNames = getUniqueCandidateListFromPolls(statePolls);
   const colors = distinctColors({ count: distinctCandidateNames.length });
   return zipObject(distinctCandidateNames, colors);
 };

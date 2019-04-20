@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as favicon from 'express-favicon';
 import * as path from 'path';
 import * as morgan from 'morgan';
+import * as bodyParser from 'body-parser';
 
 import dataRoutes from './routes/data-routes';
 import colorRouter from './routes/color-routes';
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(morgan('tiny'));
 app.use(favicon(path.join(__dirname, '/../build/favicon.ico')));
+app.use(bodyParser.json());
 
 app.use('/static', express.static(path.join(__dirname, '/../static')));
 app.use('/data', dataRoutes);

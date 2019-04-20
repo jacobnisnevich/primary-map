@@ -11,6 +11,7 @@ export type AveragedPollingData = Record<State, CandidateResults>;
 export type Palette = Record<Candidate, ChromaStatic>;
 
 export interface Poll {
+  state?: State;
   pollingSource?: string;
   date?: Date;
   sampleSize?: number;
@@ -45,3 +46,31 @@ export interface FinancialData {
   raised: number;
   spent: number;
 }
+
+export interface PollFilter {
+  limit?: number;
+  offset?: number;
+  sortCriteria?: SortCriteria;
+  columnFilters?: ColumnFilter[];
+}
+
+export interface SortCriteria {
+  field: string;
+  direction: SortDirection;
+}
+
+export type SortDirection = 'Desc' | 'Asc';
+
+export interface ColumnFilter {
+  field: string;
+  operator: ColumnFilterOperator;
+  operand: any;
+}
+
+export type ColumnFilterOperator =
+  | 'EqualTo'
+  | 'NotEqualTo'
+  | 'GreaterThan'
+  | 'GreaterThanOrEqualTo'
+  | 'LessThan'
+  | 'LessThanOrEqualTo';

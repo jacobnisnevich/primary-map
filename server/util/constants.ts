@@ -62,3 +62,17 @@ export const WIKIPEDIA_BASE_URL = 'https://en.wikipedia.org/wiki';
 export const STATE_POLLING_ROUTE = '/Statewide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
 export const NATIONAL_POLLING_ROUTE =
   '/Nationwide_opinion_polling_for_the_2020_Democratic_Party_presidential_primaries';
+
+export const SortDirection = {
+  Desc: 'Desc',
+  Asc: 'Asc'
+};
+
+export const FilterOperator = {
+  EqualTo: 'EqualTo',
+  NotEqualTo: 'NotEqualTo',
+  GreaterThan: 'GreaterThan',
+  GreaterThanOrEqualTo: 'GreaterThanOrEqualTo',
+  LessThan: 'LessThan',
+  LessThanOrEqualTo: 'LessThanOrEqualTo'
+};

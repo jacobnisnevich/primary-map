@@ -5,41 +5,28 @@ import * as path from 'path';
 import * as p from '../types';
 
 import { loadWikipediaStatePollingData, loadWikipediaNationalPollingData } from './wikipedia-parser';
-import {
-  CSV_PATH,
-  readPollingDataFromCsv,
-  writeStatePollingDataToCsv,
-  writeNationalPollingDataToCsv
-} from './csv-processing';
-import { convertFlatPollsToStatePollingData, convertFlatPollsToNationalPollingData } from './data-shaping';
+import { CSV_PATH, readPollingDataFromCsv, writePollingDataToCsv } from './csv-processing';
+import { convertFlatPollsToPolls } from './data-shaping';
+import { applyPollFilter } from './poll-filtering';
 
-export const getStatePollingData = async (forceRefresh: boolean): Promise<p.StatePollingData> => {
-  const type = 'state';
+export const getPolls = async (pollFilter: p.PollFilter, forceRefresh?: boolean): Promise<p.Poll[]> => {
+  let flatPolls = [];
 
-  if (isCachedDataValid(type) && !forceRefresh) {
-    const flatPollingData = readPollingDataFromCsv(type);
-    return convertFlatPollsToStatePollingData(flatPollingData);
+  if (isCachedDataValid() && !forceRefresh) {
+    flatPolls = readPollingDataFromCsv();
   } else {
-    const pollingData = await loadWikipediaStatePollingData();
-    writeStatePollingDataToCsv(pollingData);
-    return convertFlatPollsToStatePollingData(readPollingDataFromCsv(type));
+    const statePolls = await loadWikipediaStatePollingData();
+    const nationalPolls = await loadWikipediaNationalPollingData();
+    writePollingDataToCsv([...statePolls, ...nationalPolls]);
+    flatPolls = readPollingDataFromCsv();
   }
+
+  const filteredFlatPolls = applyPollFilter(flatPolls, pollFilter);
+  return convertFlatPollsToPolls(filteredFlatPolls);
 };
 
-export const getNationalPollingData = async (forceRefresh: boolean): Promise<p.Poll[]> => {
-  const type = 'national';
-
-  if (isCachedDataValid(type) && !forceRefresh) {
-    return convertFlatPollsToNationalPollingData(readPollingDataFromCsv(type));
-  } else {
-    const pollingData = await loadWikipediaNationalPollingData();
-    writeNationalPollingDataToCsv(pollingData);
-    return convertFlatPollsToNationalPollingData(readPollingDataFromCsv(type));
-  }
-};
-
-export const getLastModifiedTime = (type: p.PollType): Date => {
-  const fileStats = fs.statSync(CSV_PATH(type));
+export const getLastModifiedTime = (): Date => {
+  const fileStats = fs.statSync(CSV_PATH());
   return new Date(util.inspect(fileStats.mtime));
 };
 
@@ -49,11 +36,11 @@ export const getPledgedDelegateJson = (): Record<string, number> => {
   return pledgedDelegateData;
 };
 
-const isCachedDataValid = (type: p.PollType): boolean => {
+const isCachedDataValid = (): boolean => {
   const TEN_MIN_IN_MS = 1000 * 60 * 10;
 
-  if (fs.existsSync(CSV_PATH(type))) {
-    const lastModifiedTime = getLastModifiedTime(type);
+  if (fs.existsSync(CSV_PATH())) {
+    const lastModifiedTime = getLastModifiedTime();
     const timeDifferenceMs = Date.now() - lastModifiedTime.getTime();
 
     if (timeDifferenceMs < TEN_MIN_IN_MS) {

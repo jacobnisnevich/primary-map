@@ -1,10 +1,20 @@
 import * as p from '../types';
 
-import { getStatePollingData } from '../data-utils/data-store';
+import { getPolls } from '../data-utils/data-store';
+import { filterOutNullCandidatesFromPolls } from '../data-utils/polling-operations';
 import { getPalette } from '../util/colors';
+import { FilterOperator } from '../util/constants';
 
 export const getMapPalette = async (): Promise<p.Palette> => {
-  const pollingData = await getStatePollingData(false);
-  const palette = getPalette(pollingData);
+  const statePolls = await getPolls({
+    columnFilters: [
+      {
+        field: 'state',
+        operator: FilterOperator.NotEqualTo as p.ColumnFilterOperator,
+        operand: ''
+      }
+    ]
+  });
+  const palette = getPalette(filterOutNullCandidatesFromPolls(statePolls));
   return palette;
 };

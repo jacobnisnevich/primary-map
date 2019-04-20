@@ -6,7 +6,5 @@
     "incremental": true,
     "sourceMap": true
   },
-  "include": [
-    "./server/**/*"
-  ]
+  "include": ["./server/**/*"]
 }

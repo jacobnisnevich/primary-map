@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import axios from 'axios';
-import { toNumber, zipObject, startCase } from 'lodash';
+import { toNumber, flatten, startCase } from 'lodash';
 
 import * as p from '../types';
 
@@ -13,14 +13,16 @@ import {
   NATIONAL_POLLING_ROUTE
 } from '../util/constants';
 
-export const loadWikipediaStatePollingData = async (): Promise<p.StatePollingData> => {
+export const loadWikipediaStatePollingData = async (): Promise<p.Poll[]> => {
   const WIKIPEDIA_POLLING_URL = `${WIKIPEDIA_BASE_URL}${STATE_POLLING_ROUTE}`;
   const response = await axios.get(WIKIPEDIA_POLLING_URL);
   const $ = cheerio.load(response.data);
 
-  const statePollingData = STATE_NAMES.map(stateName => getStatePollingData(stateName, $));
-
-  return zipObject(STATE_NAMES, statePollingData);
+  return flatten(
+    STATE_NAMES.map(stateName =>
+      getStatePollingData(stateName, $).map((poll: p.Poll): p.Poll => ({ ...poll, state: stateName }))
+    )
+  );
 };
 
 export const loadWikipediaNationalPollingData = async (): Promise<p.Poll[]> => {
@@ -28,9 +30,7 @@ export const loadWikipediaNationalPollingData = async (): Promise<p.Poll[]> => {
   const response = await axios.get(WIKIPEDIA_POLLING_URL);
   const $ = cheerio.load(response.data);
 
-  const nationalPolls = getNationalPollingData($);
-
-  return nationalPolls;
+  return getNationalPollingData($).map((poll: p.Poll): p.Poll => ({ ...poll, state: undefined }));
 };
 
 const getNationalPollingData = ($: CheerioSelector): p.Poll[] => {

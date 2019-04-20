@@ -1,21 +1,34 @@
-import { zipObject } from 'lodash';
-
 import * as p from '../types';
 
-import { getStatePollingData, getNationalPollingData, getLastModifiedTime } from '../data-utils/data-store';
+import { getPolls, getLastModifiedTime } from '../data-utils/data-store';
 import {
   computePollingAverages,
-  getMostRecentPolls,
   getPledgedDelegateTotalsForCandidates,
   getNationalPollingAveragesForDays
 } from '../data-utils/polling-operations';
 import { getFinancialDataForCandidates } from '../data-utils/fec-data';
-import { readPollingDataFromCsv } from '../data-utils/csv-processing';
-import { convertStatePollingDataToFlatPolls, convertNationalPollingDataToFlatPolls } from '../data-utils/data-shaping';
+import { convertFlatPollsToStatePollingData, convertPollsToFlatPolls } from '../data-utils/data-shaping';
+import { FilterOperator } from '../util/constants';
+
+export const getFilteredPolls = async (pollFilter: p.PollFilter, forceRefresh: boolean): Promise<p.FlatPoll[]> => {
+  const polls = await getPolls(pollFilter, forceRefresh);
+  return convertPollsToFlatPolls(polls);
+};
 
 export const getAveragedPollingData = async (): Promise<p.AveragedPollingData> => {
-  const pollingData = await getStatePollingData(false);
-  const averagedPollingData = computePollingAverages(pollingData, 5);
+  const statePolls = await getPolls({
+    columnFilters: [
+      {
+        field: 'state',
+        operator: FilterOperator.NotEqualTo as p.ColumnFilterOperator,
+        operand: ''
+      }
+    ]
+  });
+
+  const stateFlatPolls = convertPollsToFlatPolls(statePolls);
+  const statePollingData = convertFlatPollsToStatePollingData(stateFlatPolls);
+  const averagedPollingData = computePollingAverages(statePollingData, 5);
   return averagedPollingData;
 };
 
@@ -23,38 +36,22 @@ export const getWeightedDelegateTotals = (averagedPollingData: p.AveragedPolling
   return getPledgedDelegateTotalsForCandidates(averagedPollingData);
 };
 
-export const getMostRecentPollData = async (count: number, type: p.PollType): Promise<p.FlatPoll[]> => {
-  let polls = [];
-
-  if (type === 'state') {
-    const statePollingData = await getStatePollingData(false);
-    polls = convertStatePollingDataToFlatPolls(statePollingData);
-  } else {
-    const nationalPollingData = await getNationalPollingData(false);
-    polls = convertNationalPollingDataToFlatPolls(nationalPollingData);
-  }
-
-  const mostRecentPollData = getMostRecentPolls(polls, count);
-
-  return mostRecentPollData;
-};
-
-export const getRawPolls = async (type: p.PollType, forceRefresh: boolean): Promise<p.FlatPoll[]> => {
-  if (type === 'state') {
-    await getStatePollingData(forceRefresh);
-  } else {
-    await getNationalPollingData(forceRefresh);
-  }
-  return readPollingDataFromCsv(type);
-};
-
-export const getLastModified = (type: p.PollType): Date => {
-  return getLastModifiedTime(type);
+export const getLastModified = (): Date => {
+  return getLastModifiedTime();
 };
 
 export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
-  const nationalPollingData = await getNationalPollingData(false);
-  return getNationalPollingAveragesForDays(nationalPollingData, 5, 30);
+  const nationalPolls = await getPolls({
+    columnFilters: [
+      {
+        field: 'state',
+        operator: FilterOperator.EqualTo as p.ColumnFilterOperator,
+        operand: ''
+      }
+    ]
+  });
+
+  return getNationalPollingAveragesForDays(nationalPolls, 5, 30);
 };
 
 export const getCandidateFinancialData = async (): Promise<p.CandidateFinancialData> => {

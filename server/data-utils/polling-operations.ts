@@ -44,14 +44,15 @@ export const getPledgedDelegateTotalsForCandidates = (
   }, initialState);
 };
 
-export const getUniqueCandidateList = (pollingData: p.StatePollingData): p.Candidate[] => {
-  const statePolls = flatten(Object.values(pollingData));
-  return getUniqueCandidateListFromPolls(statePolls);
+export const filterOutNullCandidatesFromPolls = (polls: p.Poll[]): p.Poll[] => {
+  return polls.map(
+    (poll: p.Poll): p.Poll => ({ ...polls, candidateResults: filterOutNullAndZeroCandidates(poll.candidateResults) })
+  );
 };
 
-export const getUniqueCandidateListFromPolls = (statePolls: p.Poll[]) => {
+export const getUniqueCandidateListFromPolls = (polls: p.Poll[]): p.Candidate[] => {
   const nonUniqueCandidateList = flatten(
-    statePolls.map((poll: p.Poll): p.Candidate[] => Object.keys(poll.candidateResults))
+    polls.map((poll: p.Poll): p.Candidate[] => Object.keys(poll.candidateResults))
   );
   return uniq(nonUniqueCandidateList);
 };

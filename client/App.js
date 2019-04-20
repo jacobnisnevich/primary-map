@@ -67,15 +67,41 @@ class App extends Component {
   };
 
   loadMostRecentStatePollData = async () => {
-    const mostRecentStatePollDataResponse = await axios.get('/data/recent-polls/state?count=5');
-    const mostRecentStatePollData = mostRecentStatePollDataResponse.data.mostRecentPollData;
+    const statePollsResponse = await axios.post('/data/polls', {
+      limit: 5,
+      sortCriteria: {
+        field: 'date',
+        direction: 'Desc'
+      },
+      columnFilters: [
+        {
+          field: 'state',
+          operator: 'NotEqualTo',
+          operand: ''
+        }
+      ]
+    });
+    const mostRecentStatePollData = statePollsResponse.data.polls;
 
     this.setState({ mostRecentStatePollData });
   };
 
   loadMostRecentNationalPollData = async () => {
-    const mostRecentNationalPollDataResponse = await axios.get('/data/recent-polls/national?count=5');
-    const mostRecentNationalPollData = mostRecentNationalPollDataResponse.data.mostRecentPollData;
+    const mostRecentNationalPollDataResponse = await axios.post('/data/polls', {
+      limit: 5,
+      sortCriteria: {
+        field: 'date',
+        direction: 'Desc'
+      },
+      columnFilters: [
+        {
+          field: 'state',
+          operator: 'EqualTo',
+          operand: ''
+        }
+      ]
+    });
+    const mostRecentNationalPollData = mostRecentNationalPollDataResponse.data.polls;
 
     const nationalPollingTrendDataResponse = await axios.get('/data/national-trends');
     const { nationalPollingTrendData } = nationalPollingTrendDataResponse.data;
@@ -85,7 +111,7 @@ class App extends Component {
 
   loadLastModifiedDate = async () => {
     setTimeout(async () => {
-      const lastModifiedDateStateResponse = await axios.get('/data/last-modified/state');
+      const lastModifiedDateStateResponse = await axios.get('/data/last-modified');
       const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
 
       this.setState({ lastModifiedState });

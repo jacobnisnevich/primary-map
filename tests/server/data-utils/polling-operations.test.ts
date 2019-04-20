@@ -48,14 +48,6 @@ describe('computePollingAverages', () => {
   });
 });
 
-describe('getUniqueCandidateList', () => {
-  it('should return a unique list of candidates from a state polling data object', () => {
-    const expectedCandidateList = ['Bernie Sanders', 'Joe Biden', 'Pete Buttigieg', 'Kamala Harris'].sort();
-    const uniqueCandidateList = getUniqueCandidateList(testStatePollingData).sort();
-    expect(uniqueCandidateList).toEqual(expectedCandidateList);
-  });
-});
-
 describe('getUniqueCandidateListFromPolls', () => {
   it('should return a unique list of candidates from a flat list of polls', () => {
     const expectedCandidateList = ['Bernie Sanders', 'Joe Biden', 'Pete Buttigieg', 'Kamala Harris'].sort();
