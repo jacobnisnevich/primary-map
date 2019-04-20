@@ -30,9 +30,9 @@ class App extends Component {
     nationalPollingTrendData: [],
     financialData: {},
     mounted: false,
-    lastModifiedState: undefined,
-    lastModifiedNational: undefined,
-    renderId: 0
+    lastModified: undefined,
+    renderId: 0,
+    breakpoint: undefined
   };
 
   async componentDidMount() {
@@ -110,11 +110,11 @@ class App extends Component {
   };
 
   loadLastModifiedDate = async () => {
-    setTimeout(async () => {
-      const lastModifiedDateStateResponse = await axios.get('/data/last-modified');
-      const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
+    await setTimeout(async () => {
+      const lastModifiedDateResponse = await axios.get('/data/last-modified');
+      const lastModified = lastModifiedDateResponse.data.lastModified;
 
-      this.setState({ lastModifiedState });
+      this.setState({ lastModified });
     }, 1000);
   };
 
@@ -165,14 +165,19 @@ class App extends Component {
   };
 
   getGridCols = () => {
-    return { lg: 12, md: 6 };
+    return { lg: 12, md: 6, sm: 6 };
   };
 
   getGridBreakpoints = () => {
     return {
       lg: 1760,
-      md: 0
+      md: 600,
+      sm: 0
     };
+  };
+
+  onBreakpointChange = breakpoint => {
+    this.setState({ breakpoint });
   };
 
   render() {
@@ -181,10 +186,8 @@ class App extends Component {
         <div id="header">
           <div>2020 Democratic Primary Overview</div>
           <div className="header-right">
-            {this.state.lastModifiedState && (
-              <div className="last-modified">{`Data last updated: ${moment(
-                this.state.lastModifiedState
-              ).fromNow()}`}</div>
+            {this.state.lastModified && this.state.breakpoint !== 'sm' && (
+              <div className="last-modified">{`Data last updated: ${moment(this.state.lastModified).fromNow()}`}</div>
             )}
             <a href="http://github.com/jacobnisnevich/primary-map" target="_blank" rel="noopener noreferrer">
               <img src={githubIcon} alt="Github" />
@@ -193,15 +196,18 @@ class App extends Component {
         </div>
 
         <ResponsiveReactGridLayout
-          className="layout"
+          className={`layout ${this.state.breakpoint}`}
           cols={this.getGridCols()}
           layouts={this.getGridLayouts()}
           breakpoints={this.getGridBreakpoints()}
+          onBreakpointChange={this.onBreakpointChange}
+          isDraggable={false}
           rowHeight={50}
           compactType="vertical"
         >
           <PrimaryMap
             key="primary-map"
+            breakpoint={this.state.breakpoint}
             averagePollingData={this.state.averagePollingData}
             palette={this.state.palette}
           />

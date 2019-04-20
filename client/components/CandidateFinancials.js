@@ -29,8 +29,8 @@ export default class CandidateFinancials extends Component {
           </tr>
         </thead>
         <tbody>
-          {sortedCandidates.map(candidate => (
-            <tr>
+          {sortedCandidates.map((candidate, index) => (
+            <tr key={index}>
               <td>{candidate}</td>
               <td>{formatCurrency(candidateFinancialTotals[candidate].totalRaised)}</td>
               <td>{formatCurrency(candidateFinancialTotals[candidate].totalSpent)}</td>

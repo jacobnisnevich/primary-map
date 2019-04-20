@@ -58,7 +58,7 @@ export default class PrimaryMap extends Component {
                   height: 'auto'
                 }}
               >
-                <ZoomableGroup disablePanning>
+                <ZoomableGroup disablePanning={this.props.breakpoint !== 'sm'}>
                   <Geographies geography="/static/states.json" disableOptimization>
                     {(geographies, projection) =>
                       geographies.map((geography, i) => {

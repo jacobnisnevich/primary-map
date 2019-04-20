@@ -5,6 +5,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: auto;
+}
+
+.sm .poll-table-container {
+  justify-content: flex-start;
 }
 
 .poll-table {
