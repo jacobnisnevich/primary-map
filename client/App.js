@@ -13,6 +13,7 @@ import Legend from './components/Legend';
 import PollTable from './components/PollTable';
 import PledgedDelegateScoreboard from './components/PledgedDelegateScoreboard';
 import NationalPollingTrends from './components/NationalPollingTrends';
+import CandidateFinancials from './components/CandidateFinancials';
 
 import './App.css';
 import githubIcon from './img/github.png';
@@ -27,6 +28,7 @@ class App extends Component {
     mostRecentStatePollData: [],
     mostRecentNationalPollData: [],
     nationalPollingTrendData: [],
+    financialData: {},
     mounted: false,
     lastModifiedState: undefined,
     lastModifiedNational: undefined,
@@ -38,6 +40,7 @@ class App extends Component {
     this.loadMostRecentStatePollData();
     this.loadMostRecentNationalPollData();
     this.loadLastModifiedDate();
+    this.loadFinancialData();
 
     setInterval(() => {
       this.setState(prevState => ({ renderId: prevState.renderId }));
@@ -81,10 +84,19 @@ class App extends Component {
   };
 
   loadLastModifiedDate = async () => {
-    const lastModifiedDateStateResponse = await axios.get('/data/last-modified/state');
-    const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
+    setTimeout(async () => {
+      const lastModifiedDateStateResponse = await axios.get('/data/last-modified/state');
+      const lastModifiedState = lastModifiedDateStateResponse.data.lastModified;
 
-    this.setState({ lastModifiedState });
+      this.setState({ lastModifiedState });
+    }, 1000);
+  };
+
+  loadFinancialData = async () => {
+    const financialDataResponse = await axios.get('/data/financials');
+    const { financialData } = financialDataResponse.data;
+
+    this.setState({ financialData });
   };
 
   getTooltipForState = stateName => {
@@ -193,6 +205,7 @@ class App extends Component {
             nationalPollingTrendData={this.state.nationalPollingTrendData}
             palette={this.state.palette}
           />
+          <CandidateFinancials key="candidate-financials" financialData={this.state.financialData} />
         </ResponsiveReactGridLayout>
 
         <ReactTooltip id="state-tooltip" getContent={stateName => this.getTooltipForState(stateName)} />

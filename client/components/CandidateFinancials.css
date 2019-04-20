@@ -1,0 +1,50 @@
+.candidate-financials-container {
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.candidate-financials-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.candidate-financials {
+  height: calc(100% - 36px);
+  width: 100%;
+}
+
+.candidate-financials-table {
+  font-size: 14px;
+  border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+}
+
+.candidate-financials-table th {
+  border-bottom: 1px solid #cccccc;
+  padding: 10px;
+}
+
+.candidate-financials-table td {
+  text-align: center;
+  padding: 10px;
+  white-space: nowrap;
+}
+
+.candidate-financials-table tr:nth-child(even) td {
+  background-color: #eeeeee;
+}
+
+.candidate-financials-table td,
+.candidate-financials-table th {
+  text-align: left;
+}
+
+.candidate-financials-table td:not(:first-child),
+.candidate-financials-table th:not(:first-child) {
+  text-align: right;
+}
