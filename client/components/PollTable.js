@@ -8,7 +8,15 @@ import { formatColumnHeader, getColumnFormatter, formatPercentageForTable } from
 
 export default class PollTable extends Component {
   getMaxCandidatesPerTable = () => {
-    return this.props.national ? 7 : 6;
+    const { national, state, sortable } = this.props;
+
+    if (national) {
+      return 7;
+    } else if (state) {
+      return 6;
+    } else if (sortable) {
+      return 15;
+    }
   };
 
   getCandidateStartIndex = () => {
@@ -49,7 +57,7 @@ export default class PollTable extends Component {
   };
 
   getTableHead = () => {
-    const { polls, title, national } = this.props;
+    const { polls, title, national, sortable } = this.props;
 
     const filteredPollData = this.filterOutEmptyColumns(polls);
     const columns = this.getColumns(filteredPollData);
@@ -60,18 +68,20 @@ export default class PollTable extends Component {
 
     return (
       <thead>
-        <tr>
-          <td colSpan={columns.length} className="grid-title">
-            <span>{title}</span>
-            <span className="poll-link">
-              (
-              <a href={link} target="_blank" rel="noopener noreferrer">
-                source
-              </a>
-              )
-            </span>
-          </td>
-        </tr>
+        {!sortable && (
+          <tr>
+            <td colSpan={columns.length} className="grid-title">
+              <span>{title}</span>
+              <span className="poll-link">
+                (
+                <a href={link} target="_blank" rel="noopener noreferrer">
+                  source
+                </a>
+                )
+              </span>
+            </td>
+          </tr>
+        )}
         <tr>
           {columns.map((header, index) => (
             <th key={index}>{formatColumnHeader(startCase(header))}</th>

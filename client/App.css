@@ -39,51 +39,23 @@ body {
   transition: opacity 50ms ease-in-out;
 }
 
-.widget {
-  touch-action: initial !important;
-  background-color: #ffffff;
-}
-
-#state-tooltip {
-  background-color: white;
-  color: black;
-  width: 200px;
-  padding: 0;
-  opacity: 0.95;
-}
-
-#state-tooltip:after {
-  border-bottom-color: #cccccc;
-  border-top-color: #cccccc;
-}
-
-.state-tooltip-container {
-  border: 1px solid #cccccc;
+#tabs {
+  font-weight: 300;
+  font-size: 20px;
+  padding: 12px;
+  background-color: #cccccc;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
-.state-tooltip-title {
-  font-weight: bold;
-  text-align: center;
-  margin: 5px;
+#tabs a {
+  color: #222222;
+  text-decoration: none;
+  margin-right: 18px;
+  padding: 0 5px 2px;
+  transition: border-bottom 100ms ease-in-out;
 }
 
-.state-tooltip-candidates {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.state-tooltip-candidate-item {
-  margin-right: 8px;
-}
-
-.grid-title {
-  width: 100%;
-  border-bottom: 1px solid #cccccc;
-  font-size: 16px;
-  padding: 8px;
-  box-sizing: border-box;
-  color: #666;
-  font-weight: 700;
+#tabs a.selected {
+  color: #222222;
+  border-bottom: 1px solid #444444;
 }

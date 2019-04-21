@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { isEmpty } from 'lodash';
 import ReactTooltip from 'react-tooltip';
-import { Responsive, WidthProvider } from 'react-grid-layout';
+import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import moment from 'moment';
 
-import { formatPercentage, getColorForCandidate, fixMessedUpName } from './utils/common';
-import { gridLayout } from './layout';
+import Dashboard from './components/Dashboard';
+import Polls from './components/Polls';
 
-import PrimaryMap from './components/PrimaryMap';
-import Legend from './components/Legend';
-import PollTable from './components/PollTable';
-import PledgedDelegateScoreboard from './components/PledgedDelegateScoreboard';
-import NationalPollingTrends from './components/NationalPollingTrends';
-import CandidateFinancials from './components/CandidateFinancials';
+import {
+  getStatePollingData,
+  getPalette,
+  getRecentStatePolls,
+  getRecentNationalPolls,
+  getNationalTrends,
+  getLastModifiedDate,
+  getFinancialData
+} from './utils/api-helpers';
 
 import './App.css';
 import githubIcon from './img/github.png';
-
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class App extends Component {
   state = {
@@ -57,136 +56,51 @@ class App extends Component {
   }
 
   loadAveragePollingData = async () => {
-    const statePollingDataResponse = await axios.get('/data/state-polling-data');
-    const { averagePollingData, weightedDelegateTotals } = statePollingDataResponse.data;
-
-    const paletteResponse = await axios.get('/color/palette');
-    const { palette } = paletteResponse.data;
-
+    const { averagePollingData, weightedDelegateTotals } = await getStatePollingData();
+    const { palette } = await getPalette();
     this.setState({ averagePollingData, weightedDelegateTotals, palette });
   };
 
   loadMostRecentStatePollData = async () => {
-    const statePollsResponse = await axios.post('/data/polls', {
-      limit: 5,
-      sortCriteria: {
-        field: 'date',
-        direction: 'Desc'
-      },
-      columnFilters: [
-        {
-          field: 'state',
-          operator: 'NotEqualTo',
-          operand: ''
-        }
-      ]
-    });
-    const mostRecentStatePollData = statePollsResponse.data.polls;
-
+    const mostRecentStatePollData = await getRecentStatePolls(5);
     this.setState({ mostRecentStatePollData });
   };
 
   loadMostRecentNationalPollData = async () => {
-    const mostRecentNationalPollDataResponse = await axios.post('/data/polls', {
-      limit: 5,
-      sortCriteria: {
-        field: 'date',
-        direction: 'Desc'
-      },
-      columnFilters: [
-        {
-          field: 'state',
-          operator: 'EqualTo',
-          operand: ''
-        }
-      ]
-    });
-    const mostRecentNationalPollData = mostRecentNationalPollDataResponse.data.polls;
-
-    const nationalPollingTrendDataResponse = await axios.get('/data/national-trends');
-    const { nationalPollingTrendData } = nationalPollingTrendDataResponse.data;
-
+    const mostRecentNationalPollData = await getRecentNationalPolls(5);
+    const { nationalPollingTrendData } = await getNationalTrends();
     this.setState({ mostRecentNationalPollData, nationalPollingTrendData });
   };
 
   loadLastModifiedDate = async () => {
     await setTimeout(async () => {
-      const lastModifiedDateResponse = await axios.get('/data/last-modified');
-      const lastModified = lastModifiedDateResponse.data.lastModified;
-
+      const lastModified = await getLastModifiedDate();
       this.setState({ lastModified });
     }, 1000);
   };
 
   loadFinancialData = async () => {
-    const financialDataResponse = await axios.get('/data/financials');
-    const { financialData } = financialDataResponse.data;
-
+    const { financialData } = await getFinancialData();
     this.setState({ financialData });
   };
 
-  getTooltipForState = stateName => {
-    const { averagePollingData } = this.state;
-    const stateData = averagePollingData[stateName];
-
-    if (isEmpty(averagePollingData) || isEmpty(stateData)) {
-      return null;
-    }
-
-    return (
-      <div className="state-tooltip-container">
-        <div className="state-tooltip-title">{stateName}</div>
-        {Object.keys(stateData)
-          .sort((a, b) => stateData[b] - stateData[a])
-          .map((candidate, index) => (
-            <div key={index} className="state-tooltip-candidates">
-              {this.getCandidateColorForLegend(index, candidate)}
-              <div className="state-tooltip-candidate-item">{formatPercentage(stateData[candidate] || 0)}</div>
-            </div>
-          ))}
-      </div>
-    );
-  };
-
-  getCandidateColorForLegend = (index, candidate) => {
-    const { palette } = this.state;
-    const color = getColorForCandidate(candidate, palette);
-
-    return (
-      <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ backgroundColor: color, border: '1px solid black', height: 16, width: 16, margin: 8 }} />
-        <div>{fixMessedUpName(candidate)}</div>
-      </div>
-    );
-  };
-
-  getGridLayouts = () => {
-    return gridLayout;
-  };
-
-  getGridCols = () => {
-    return { lg: 12, md: 6, sm: 6 };
-  };
-
-  getGridBreakpoints = () => {
-    return {
-      lg: 1760,
-      md: 600,
-      sm: 0
-    };
-  };
-
-  onBreakpointChange = breakpoint => {
-    this.setState({ breakpoint });
-  };
-
   render() {
+    const {
+      averagePollingData,
+      palette,
+      mostRecentStatePollData,
+      mostRecentNationalPollData,
+      weightedDelegateTotals,
+      nationalPollingTrendData,
+      financialData
+    } = this.state;
+
     return (
       <div>
         <div id="header">
           <div>2020 Democratic Primary Overview</div>
           <div className="header-right">
-            {this.state.lastModified && this.state.breakpoint !== 'sm' && (
+            {this.state.lastModified && (
               <div className="last-modified">{`Data last updated: ${moment(this.state.lastModified).fromNow()}`}</div>
             )}
             <a href="http://github.com/jacobnisnevich/primary-map" target="_blank" rel="noopener noreferrer">
@@ -195,55 +109,36 @@ class App extends Component {
           </div>
         </div>
 
-        <ResponsiveReactGridLayout
-          className={`layout ${this.state.breakpoint}`}
-          cols={this.getGridCols()}
-          layouts={this.getGridLayouts()}
-          breakpoints={this.getGridBreakpoints()}
-          onBreakpointChange={this.onBreakpointChange}
-          isDraggable={false}
-          rowHeight={50}
-          compactType="vertical"
-        >
-          <PrimaryMap
-            key="primary-map"
-            breakpoint={this.state.breakpoint}
-            averagePollingData={this.state.averagePollingData}
-            palette={this.state.palette}
-          />
-          <Legend
-            key="legend"
-            palette={this.state.palette}
-            getCandidateColorForLegend={this.getCandidateColorForLegend}
-          />
-          <PollTable
-            key="recent-state-polls"
-            polls={this.state.mostRecentStatePollData}
-            title="Most Recent State Primary Polls"
-          />
-          <PollTable
-            national
-            key="recent-national-polls"
-            polls={this.state.mostRecentNationalPollData}
-            title="Most Recent National Primary Polls"
-          />
-          <PledgedDelegateScoreboard
-            key="pledged-delegate-scoreboard"
-            weightedDelegateTotals={this.state.weightedDelegateTotals}
-            palette={this.state.palette}
-          />
-          <NationalPollingTrends
-            key="national-polling-trends"
-            nationalPollingTrendData={this.state.nationalPollingTrendData}
-            palette={this.state.palette}
-          />
-          <CandidateFinancials key="candidate-financials" financialData={this.state.financialData} />
-        </ResponsiveReactGridLayout>
+        <div id="tabs">
+          <Link to="/" className={this.props.location.pathname === '/' ? 'selected' : ''}>
+            Dashboard
+          </Link>
+          <Link to="/polls" className={this.props.location.pathname === '/polls' ? 'selected' : ''}>
+            Polls
+          </Link>
+        </div>
 
-        <ReactTooltip id="state-tooltip" getContent={stateName => this.getTooltipForState(stateName)} />
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <Dashboard
+                averagePollingData={averagePollingData}
+                palette={palette}
+                mostRecentStatePollData={mostRecentStatePollData}
+                mostRecentNationalPollData={mostRecentNationalPollData}
+                weightedDelegateTotals={weightedDelegateTotals}
+                nationalPollingTrendData={nationalPollingTrendData}
+                financialData={financialData}
+              />
+            )}
+          />
+          <Route path="/polls" render={() => <Polls />} />
+        </Switch>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

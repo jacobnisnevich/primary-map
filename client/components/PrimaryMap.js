@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { ComposableMap, ZoomableGroup, Geographies, Geography } from 'react-simple-maps';
 import { isEmpty } from 'lodash';
 import { ScaleLoader } from 'react-spinners';
+import ReactTooltip from 'react-tooltip';
 
-import { getColorForCandidate } from '../utils/common';
+import { formatPercentage, getColorForCandidate } from '../utils/common';
 
 import './PrimaryMap.css';
 
@@ -37,6 +38,29 @@ export default class PrimaryMap extends Component {
     return getColorForCandidate(leadingCandidate, palette);
   };
 
+  getTooltipForState = stateName => {
+    const { averagePollingData } = this.props;
+    const stateData = averagePollingData[stateName];
+
+    if (isEmpty(averagePollingData) || isEmpty(stateData)) {
+      return null;
+    }
+
+    return (
+      <div className="state-tooltip-container">
+        <div className="state-tooltip-title">{stateName}</div>
+        {Object.keys(stateData)
+          .sort((a, b) => stateData[b] - stateData[a])
+          .map((candidate, index) => (
+            <div key={index} className="state-tooltip-candidates">
+              {this.props.getCandidateColorForLegend(index, candidate)}
+              <div className="state-tooltip-candidate-item">{formatPercentage(stateData[candidate] || 0)}</div>
+            </div>
+          ))}
+      </div>
+    );
+  };
+
   render() {
     const { averagePollingData } = this.props;
 
@@ -58,7 +82,7 @@ export default class PrimaryMap extends Component {
                   height: 'auto'
                 }}
               >
-                <ZoomableGroup disablePanning={this.props.breakpoint !== 'sm'}>
+                <ZoomableGroup disablePanning>
                   <Geographies geography="/static/states.json" disableOptimization>
                     {(geographies, projection) =>
                       geographies.map((geography, i) => {
@@ -97,6 +121,7 @@ export default class PrimaryMap extends Component {
             <ScaleLoader sizeUnit="px" size={150} color="#444444" loading={isEmpty(averagePollingData)} />
           </div>
         )}
+        <ReactTooltip id="state-tooltip" getContent={stateName => this.getTooltipForState(stateName)} />
       </div>
     );
   }

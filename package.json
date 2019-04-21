@@ -65,6 +65,8 @@
     "react-dev-utils": "^8.0.0",
     "react-dom": "^16.8.6",
     "react-grid-layout": "^0.16.6",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-simple-maps": "^0.12.1",
     "react-spinners": "^0.5.4",
     "react-tooltip": "^3.10.0",
