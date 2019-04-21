@@ -51,11 +51,12 @@ body {
   color: #222222;
   text-decoration: none;
   margin-right: 18px;
-  padding: 0 5px 2px;
-  transition: border-bottom 100ms ease-in-out;
+  padding: 2px 6px;
+  transition: border 100ms ease-in-out;
 }
 
 #tabs a.selected {
   color: #222222;
-  border-bottom: 1px solid #444444;
+  border: 1px solid #444444;
+  background-color: rgba(255, 255, 255, 0.3);
 }

@@ -1,3 +1,7 @@
 .polls-page {
   margin: 10px;
 }
+
+.polls-page .poll-table-container {
+  min-height: 300px;
+}

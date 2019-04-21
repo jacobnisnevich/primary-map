@@ -32,7 +32,7 @@ export default class Polls extends Component {
   render() {
     return (
       <div className="polls-page">
-        <PollTable polls={this.state.polls} sortable />
+        <PollTable polls={this.state.polls} sortable pollFilter={this.state.pollFilter} />
       </div>
     );
   }

@@ -148,7 +148,11 @@ export default class PollTable extends Component {
     const { polls } = this.props;
 
     return (
-      <div className="poll-table-container widget" key={this.props.key} style={this.props.style}>
+      <div
+        className={`poll-table-container widget ${!isEmpty(polls) ? 'loaded' : 'loading'}`}
+        key={this.props.key}
+        style={this.props.style}
+      >
         {!isEmpty(polls) ? (
           <table className="poll-table">
             {this.getTableHead()}

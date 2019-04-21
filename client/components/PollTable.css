@@ -8,7 +8,8 @@
   overflow-x: auto;
 }
 
-.sm .poll-table-container {
+.sm .poll-table-container.loaded,
+.polls-page .poll-table-container.loaded {
   justify-content: flex-start;
 }
 
