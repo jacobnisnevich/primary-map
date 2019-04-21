@@ -2,7 +2,7 @@
   margin: 10px;
 }
 
-.polls-page .poll-table-container {
+.polls-page .poll-table-container.loading {
   min-height: 300px;
 }
 
