@@ -51,6 +51,16 @@ export const getPolls = async pollFilter => {
   return pollsResponse.data.polls;
 };
 
+export const getPollCount = async pollFilter => {
+  const pollCountResponse = await axios.post('/data/polls/count', pollFilter);
+  return pollCountResponse.data.count;
+};
+
+export const getDistinctColumns = async () => {
+  const distinctColumnValuesResponse = await axios.get('/data/distinct-columns');
+  return distinctColumnValuesResponse.data.columnValues;
+};
+
 export const getNationalTrends = async () => {
   const nationalPollingTrendDataResponse = await axios.get('/data/national-trends');
   return nationalPollingTrendDataResponse.data;

@@ -45,6 +45,10 @@ const applyColumnFilter = (polls: p.FlatPoll[], columnFilter: p.ColumnFilter): p
           return pollField < filterOperand;
         case FilterOperator.LessThanOrEqualTo:
           return pollField <= filterOperand;
+        case FilterOperator.In:
+          return filterOperand.includes(pollField);
+        case FilterOperator.NotIn:
+          return filterOperand.includes(pollField);
         default:
           return true;
       }

@@ -74,6 +74,13 @@ export const getNationalPollingAveragesForDays = (
   return { candidateResults, days };
 };
 
+export const getDistinctColumnValues = (polls: p.Poll[]) => {
+  return {
+    state: uniq(polls.map((poll: p.Poll) => poll.state)),
+    polling_source: uniq(polls.map((poll: p.Poll) => poll.pollingSource))
+  };
+};
+
 const computingRollingPollingAverage = (polls: p.Poll[], pollCount: number, startDate: Date): p.CandidateResults => {
   const pollsBeforeDate = polls.filter((poll: p.Poll): boolean => poll.date < startDate);
   return computePollingAveragesForState(pollsBeforeDate, pollCount);

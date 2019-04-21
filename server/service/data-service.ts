@@ -4,7 +4,8 @@ import { getPolls, getLastModifiedTime } from '../data-utils/data-store';
 import {
   computePollingAverages,
   getPledgedDelegateTotalsForCandidates,
-  getNationalPollingAveragesForDays
+  getNationalPollingAveragesForDays,
+  getDistinctColumnValues
 } from '../data-utils/polling-operations';
 import { getFinancialDataForCandidates } from '../data-utils/fec-data';
 import { convertFlatPollsToStatePollingData, convertPollsToFlatPolls } from '../data-utils/data-shaping';
@@ -56,4 +57,9 @@ export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
 
 export const getCandidateFinancialData = async (): Promise<p.CandidateFinancialData> => {
   return await getFinancialDataForCandidates();
+};
+
+export const getDistinctColumns = async (): Promise<Record<string, string[]>> => {
+  const polls = await getPolls({});
+  return await getDistinctColumnValues(polls);
 };

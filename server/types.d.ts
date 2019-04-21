@@ -73,4 +73,6 @@ export type ColumnFilterOperator =
   | 'GreaterThan'
   | 'GreaterThanOrEqualTo'
   | 'LessThan'
-  | 'LessThanOrEqualTo';
+  | 'LessThanOrEqualTo'
+  | 'In'
+  | 'NotIn';

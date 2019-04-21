@@ -74,5 +74,7 @@ export const FilterOperator = {
   GreaterThan: 'GreaterThan',
   GreaterThanOrEqualTo: 'GreaterThanOrEqualTo',
   LessThan: 'LessThan',
-  LessThanOrEqualTo: 'LessThanOrEqualTo'
+  LessThanOrEqualTo: 'LessThanOrEqualTo',
+  In: 'In',
+  NotIn: 'NotIn'
 };
