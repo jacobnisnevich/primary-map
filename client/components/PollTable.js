@@ -48,7 +48,7 @@ export default class PollTable extends Component {
     const columns = Object.keys(polls[0]);
     const candidates = columns.slice(this.getCandidateStartIndex(), columns.length);
     const scores = candidates.map(candidate => {
-      return sum(polls.map(poll => (poll[candidate] === '-' ? 0 : poll[candidate])));
+      return sum(polls.slice(0, 10).map(poll => (poll[candidate] === '-' ? 0 : poll[candidate])));
     });
 
     const candidateScores = zipObject(candidates, scores);
