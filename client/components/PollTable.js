@@ -92,9 +92,16 @@ export default class PollTable extends Component {
   };
 
   getTableCell = (poll, column, columnIndex, isWinningCandidate) => {
+    const { heatmap } = this.props;
     const columnFormatter = getColumnFormatter(column) || formatPercentageForTable;
+    let style = {};
+
+    if (columnFormatter(poll[column]).includes('%') && heatmap) {
+      style = { backgroundColor: `rgba(255, 0, 0, ${poll[column] / 100})` };
+    }
+
     return (
-      <td key={columnIndex} className={isWinningCandidate ? 'winner' : ''}>
+      <td key={columnIndex} className={isWinningCandidate && !heatmap ? 'winner' : ''} style={style}>
         {columnFormatter(poll[column])}
       </td>
     );

@@ -42,13 +42,9 @@
 }
 
 .poll-table td.winner {
-  background-color: #fffbcb;
+  background-color: rgba(255, 235, 0, 0.2);
 }
 
-.poll-table tr:nth-child(even) td.winner {
-  background-color: #e6e3b6;
-}
-
-.poll-table tr:nth-child(even) td {
+.poll-table tbody tr:nth-child(even) {
   background-color: #eeeeee;
 }
