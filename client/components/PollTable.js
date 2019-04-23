@@ -108,7 +108,7 @@ export default class PollTable extends Component {
   };
 
   getWinningCandidateIndices = (poll, columns) => {
-    const marginOfError = parseFloat(columns[2]) || 0;
+    const marginOfError = parseFloat(poll.margin_of_error) || 0;
     const columnValues = columns.map(column => poll[column]);
     const candidatePollResults = columnValues.slice(this.getCandidateStartIndex(), columns.length).map(columnValue => {
       if (columnValue === '-') {
@@ -118,8 +118,12 @@ export default class PollTable extends Component {
     });
     const highestPollResult = Math.max(...candidatePollResults);
     const winningCandidateIndices = candidatePollResults
-      .filter(result => result + marginOfError >= highestPollResult)
-      .map(result => columnValues.indexOf(result));
+      .map((candidateResult, index) => ({
+        isWinner: candidateResult + marginOfError >= highestPollResult,
+        index: index + this.getCandidateStartIndex()
+      }))
+      .filter(candidateResult => candidateResult.isWinner)
+      .map(candidateResult => candidateResult.index);
 
     return winningCandidateIndices;
   };
