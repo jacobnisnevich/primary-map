@@ -26,10 +26,14 @@ export default class PollTable extends Component {
   filterOutEmptyColumns = polls => {
     const columns = Object.keys(polls[0]);
 
-    const validColumns = columns.filter(column => {
+    const commonColumns = columns.slice(0, this.getCandidateStartIndex());
+    const candidateColumns = columns.slice(this.getCandidateStartIndex(), columns.length);
+    const validCandidateColumns = candidateColumns.filter(column => {
       const valuesForColumn = polls.map(poll => poll[column]);
       return valuesForColumn.filter(value => value !== 0 && value !== '-').length > 0;
     });
+
+    const validColumns = [...commonColumns, ...validCandidateColumns];
 
     return polls.map(poll => pick(poll, validColumns));
   };
