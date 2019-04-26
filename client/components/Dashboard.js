@@ -81,7 +81,12 @@ export default class Dashboard extends Component {
           getCandidateColorForLegend={this.getCandidateColorForLegend}
         />
         <Legend key="legend" palette={palette} getCandidateColorForLegend={this.getCandidateColorForLegend} />
-        <PollTable key="recent-state-polls" polls={mostRecentStatePollData} title="Most Recent State Primary Polls" />
+        <PollTable
+          state
+          key="recent-state-polls"
+          polls={mostRecentStatePollData}
+          title="Most Recent State Primary Polls"
+        />
         <PollTable
           national
           key="recent-national-polls"

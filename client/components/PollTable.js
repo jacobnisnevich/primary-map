@@ -13,7 +13,7 @@ export default class PollTable extends Component {
     if (national) {
       return 7;
     } else if (state) {
-      return 6;
+      return 7;
     } else if (sortable) {
       return 15;
     }
