@@ -52,6 +52,7 @@ export interface PollFilter {
   offset?: number;
   sortCriteria?: SortCriteria;
   columnFilters?: ColumnFilter[];
+  includeHeadToHead?: boolean;
 }
 
 export interface SortCriteria {
