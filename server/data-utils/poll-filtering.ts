@@ -19,6 +19,10 @@ export const applyPollFilter = (flatPolls: p.FlatPoll[], pollFilter: p.PollFilte
     );
   }
 
+  if (!pollFilter.includeHeadToHead) {
+    filteredPolls = removeHeadToHeadPolls(filteredPolls);
+  }
+
   if (pollFilter.limit) {
     filteredPolls = filteredPolls.slice(0, pollFilter.limit);
   }
@@ -77,4 +81,13 @@ const sortByCriteria = (pollA: p.FlatPoll, pollB: p.FlatPoll, sortCriteria: p.So
   } else {
     return 0;
   }
+};
+
+const removeHeadToHeadPolls = (polls: p.FlatPoll[]): p.FlatPoll[] => {
+  return polls.filter(
+    (poll: p.FlatPoll): boolean => {
+      const pollResults = Object.values(poll).slice(5, Object.values(poll).length);
+      return pollResults.filter((result: string): boolean => result !== '-').length > 2;
+    }
+  );
 };

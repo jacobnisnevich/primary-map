@@ -2,7 +2,6 @@ import * as p from '../../../server/types';
 
 import {
   computePollingAverages,
-  getUniqueCandidateList,
   getUniqueCandidateListFromPolls,
   getMostRecentPolls
 } from '../../../server/data-utils/polling-operations';
@@ -63,7 +62,8 @@ describe('getMostRecentPolls', () => {
       testStatePollingData['Washington'][0].date,
       testStatePollingData['California'][0].date
     ];
-    const recentPolls = getMostRecentPolls(testStatePollingData, 2).map((poll: p.FlatPoll): Date => poll.date);
+    const flatPollingData = [...testStatePollingData['California'], ...testStatePollingData['Washington']];
+    const recentPolls = getMostRecentPolls(flatPollingData, 2).map(poll => poll.date);
     expect(recentPolls).toEqual(expectedRecentPolls);
   });
 });
