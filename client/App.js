@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
-import moment from 'moment';
 
 import Dashboard from './components/Dashboard';
 import Polls from './components/Polls';
@@ -12,7 +11,6 @@ import {
   getRecentStatePolls,
   getRecentNationalPolls,
   getNationalTrends,
-  getLastModifiedDate,
   getFinancialData
 } from './utils/api-helpers';
 
@@ -29,7 +27,6 @@ class App extends Component {
     nationalPollingTrendData: [],
     financialData: {},
     mounted: false,
-    lastModified: undefined,
     renderId: 0,
     breakpoint: undefined
   };
@@ -38,7 +35,6 @@ class App extends Component {
     this.loadAveragePollingData();
     this.loadMostRecentStatePollData();
     this.loadMostRecentNationalPollData();
-    this.loadLastModifiedDate();
     this.loadFinancialData();
 
     setInterval(() => {
@@ -72,13 +68,6 @@ class App extends Component {
     this.setState({ mostRecentNationalPollData, nationalPollingTrendData });
   };
 
-  loadLastModifiedDate = async () => {
-    await setTimeout(async () => {
-      const lastModified = await getLastModifiedDate();
-      this.setState({ lastModified });
-    }, 1000);
-  };
-
   loadFinancialData = async () => {
     const { financialData } = await getFinancialData();
     this.setState({ financialData });
@@ -100,9 +89,6 @@ class App extends Component {
         <div id="header">
           <div>2020 Democratic Primary Overview</div>
           <div className="header-right">
-            {this.state.lastModified && (
-              <div className="last-modified">{`Data last updated: ${moment(this.state.lastModified).fromNow()}`}</div>
-            )}
             <a href="http://github.com/jacobnisnevich/primary-map" target="_blank" rel="noopener noreferrer">
               <img src={githubIcon} alt="Github" />
             </a>

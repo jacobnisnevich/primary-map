@@ -1,5 +1,3 @@
-import * as p from '../../../server/types';
-
 import {
   computePollingAverages,
   getUniqueCandidateListFromPolls,

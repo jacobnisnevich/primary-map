@@ -73,7 +73,7 @@ export default class PrimaryMap extends Component {
               <ComposableMap
                 projection="albersUsa"
                 projectionConfig={{
-                  scale: 1000
+                  scale: parseInt(this.props.style.width, 10) * 1.1
                 }}
                 width={parseInt(this.props.style.width, 10)}
                 height={parseInt(this.props.style.height, 10) - 36 - 8}

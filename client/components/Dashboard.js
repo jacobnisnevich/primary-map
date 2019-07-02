@@ -5,8 +5,8 @@ import PrimaryMap from './PrimaryMap';
 import Legend from './Legend';
 import PollTable from './PollTable';
 import PledgedDelegateScoreboard from './PledgedDelegateScoreboard';
-import NationalPollingTrends from './NationalPollingTrends';
 import CandidateFinancials from './CandidateFinancials';
+import PollingTrendChart from './PollingTrendChart';
 
 import { getColorForCandidate, fixMessedUpName } from '../utils/common';
 import { gridLayout } from '../layout';
@@ -98,11 +98,7 @@ export default class Dashboard extends Component {
           weightedDelegateTotals={weightedDelegateTotals}
           palette={palette}
         />
-        <NationalPollingTrends
-          key="national-polling-trends"
-          nationalPollingTrendData={nationalPollingTrendData}
-          palette={palette}
-        />
+        <PollingTrendChart key="polling-trend-chart" pollingTrendData={nationalPollingTrendData} palette={palette} />
         <CandidateFinancials key="candidate-financials" financialData={financialData} />
       </ResponsiveReactGridLayout>
     );

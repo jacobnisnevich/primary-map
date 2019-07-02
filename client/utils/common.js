@@ -42,7 +42,7 @@ export const formatColumnHeader = columnHeader => {
 export const getColumnFormatter = columnType => {
   return {
     polling_source: text => text,
-    date: text => new Date(text).toLocaleDateString(),
+    date: text => new Date(text).toDateString(),
     sample_size: text => text,
     margin_of_error: text => (text === '0' ? '-' : text),
     state: text => (text === '' ? '-' : text)

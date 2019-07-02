@@ -52,7 +52,7 @@ export const getNationalPollingTrendData = async (): Promise<p.TrendData> => {
     ]
   });
 
-  return getNationalPollingAveragesForDays(nationalPolls, 5, 30);
+  return getNationalPollingAveragesForDays(nationalPolls, 3, 45);
 };
 
 export const getCandidateFinancialData = async (): Promise<p.CandidateFinancialData> => {

@@ -3,42 +3,35 @@ export const gridLayout = {
     {
       x: 0,
       y: 0,
-      w: 5,
-      h: 9,
+      w: 6,
+      h: 14,
       i: 'primary-map'
     },
     {
       x: 0,
-      y: 9,
-      w: 5,
+      y: 14,
+      w: 6,
       h: 3,
       i: 'legend'
     },
     {
-      x: 5,
-      y: 0,
-      w: 7,
-      h: 5,
-      i: 'recent-state-polls'
-    },
-    {
-      x: 5,
+      x: 6,
       y: 5,
-      w: 7,
+      w: 6,
       h: 5,
       i: 'recent-national-polls'
     },
     {
-      x: 0,
-      y: 12,
-      w: 5,
+      x: 6,
+      y: 0,
+      w: 6,
       h: 5,
-      i: 'national-polling-trends'
+      i: 'recent-state-polls'
     },
     {
-      x: 5,
+      x: 6,
       y: 10,
-      w: 4,
+      w: 3,
       h: 7,
       i: 'pledged-delegate-scoreboard'
     },
@@ -48,6 +41,13 @@ export const gridLayout = {
       w: 3,
       h: 7,
       i: 'candidate-financials'
+    },
+    {
+      x: 0,
+      y: 18,
+      w: 12,
+      h: 8,
+      i: 'polling-trend-chart'
     }
   ],
   md: [
@@ -55,50 +55,50 @@ export const gridLayout = {
       x: 0,
       y: 0,
       w: 6,
-      h: 9,
+      h: 14,
       i: 'primary-map'
     },
     {
       x: 0,
-      y: 9,
+      y: 14,
       w: 6,
       h: 3,
       i: 'legend'
     },
     {
       x: 0,
-      y: 12,
+      y: 17,
       w: 6,
       h: 5,
       i: 'recent-state-polls'
     },
     {
       x: 0,
-      y: 17,
+      y: 23,
       w: 6,
       h: 5,
       i: 'recent-national-polls'
     },
     {
       x: 0,
-      y: 22,
-      w: 6,
-      h: 5,
-      i: 'national-polling-trends'
-    },
-    {
-      x: 0,
-      y: 27,
+      y: 28,
       w: 3,
       h: 7,
       i: 'pledged-delegate-scoreboard'
     },
     {
       x: 3,
-      y: 27,
+      y: 35,
       w: 3,
       h: 7,
       i: 'candidate-financials'
+    },
+    {
+      x: 0,
+      y: 42,
+      w: 6,
+      h: 6,
+      i: 'polling-trend-chart'
     }
   ],
   sm: [
@@ -134,22 +134,22 @@ export const gridLayout = {
       x: 0,
       y: 22,
       w: 6,
-      h: 5,
-      i: 'national-polling-trends'
-    },
-    {
-      x: 0,
-      y: 27,
-      w: 6,
       h: 7,
       i: 'pledged-delegate-scoreboard'
     },
     {
       x: 0,
-      y: 33,
+      y: 29,
       w: 6,
       h: 7,
       i: 'candidate-financials'
+    },
+    {
+      x: 0,
+      y: 36,
+      w: 6,
+      h: 5,
+      i: 'polling-trend-chart'
     }
   ]
 };
