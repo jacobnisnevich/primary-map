@@ -34,14 +34,12 @@ export const loadWikipediaNationalPollingData = async (): Promise<p.Poll[]> => {
 };
 
 const getNationalPollingData = ($: CheerioSelector): p.Poll[] => {
-  const tableElements = $('.wikitable th:contains("Poll source")').closest('.wikitable');
+  const tableElements = $('.wikitable th:contains("Marginof error")').closest('.wikitable');
   let polls = [];
 
-  tableElements.each(
-    (index: number, tableElement: CheerioElement): void => {
-      polls = [...polls, ...parseNationalPollingTable(tableElement, $)];
-    }
-  );
+  tableElements.each((index: number, tableElement: CheerioElement): void => {
+    polls = [...polls, ...parseNationalPollingTable(tableElement, $)];
+  });
 
   return polls;
 };
@@ -68,6 +66,8 @@ const getStatePollingData = (stateName: string, $: CheerioSelector): p.Poll[] =>
   const stateCaucusId = `${stateNameFormatted}_${CAUCUS}`;
   const caucusHeaderTextElement = $(`#${stateCaucusId}`)[0];
 
+  $('table:contains(Polling Aggregation)').remove();
+
   if (primaryHeaderTextElement) {
     return getStatePollsFromTable(primaryHeaderTextElement, $);
   } else if (caucusHeaderTextElement) {
@@ -92,11 +92,10 @@ const getTableDefinition = (tableHeaderElement: Cheerio, $: CheerioSelector): p.
   const tableHeaderColumns = tableHeaderElement.find('th');
 
   const columnNames = tableHeaderColumns
-    .map(
-      (index: number, tableHeaderColumn: CheerioElement): string =>
-        $(tableHeaderColumn)
-          .text()
-          .trim()
+    .map((index: number, tableHeaderColumn: CheerioElement): string =>
+      $(tableHeaderColumn)
+        .text()
+        .trim()
     )
     .get();
   const candidates = columnNames
