@@ -199,7 +199,8 @@ const cleanUpPollingSourceValue = (pollingSourceValue: string): string => {
   return pollingSourceValue.trim().replace(/\[[^\]]*]/, '');
 };
 
-const cleanUpDateValue = (dateValue: string, year?: string): Date => {
+// Exporting for testing
+export const cleanUpDateValue = (dateValue: string, year?: string): Date => {
   const dateString = year ? `${dateValue} ${year}` : dateValue;
   const numberOfMonths = dateString.replace(/[^a-zA-Z]/g, '').length / 3;
 
@@ -207,10 +208,12 @@ const cleanUpDateValue = (dateValue: string, year?: string): Date => {
     return new Date(dateValue);
   }
 
+  const dateStringNormalized = dateString.replace('-', '–');
+
   if (numberOfMonths === 1) {
-    return new Date(dateString.replace(/(...) .+–(.*)/i, '$1 $2'));
+    return new Date(dateStringNormalized.replace(/(...) .+–(.*)/i, '$1 $2'));
   } else if (numberOfMonths === 2) {
-    return new Date(dateString.replace(/(.*) – (.*)/i, '$2'));
+    return new Date(dateStringNormalized.replace(/(.*) – (.*)/i, '$2').replace(/(.*)–(.*)/i, '$2'));
   } else {
     return new Date();
   }
