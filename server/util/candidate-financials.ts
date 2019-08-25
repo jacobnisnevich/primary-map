@@ -1,5 +1,5 @@
 export const candidateCommitteeIds = {
-  'Joe Biden': undefined,
+  'Joe Biden': 'C00703975',
   'Cory Booker': 'C00695510',
   'Pete Buttigieg': 'C00697441',
   'Kamala Harris': 'C00694455',
