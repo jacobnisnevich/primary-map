@@ -78,9 +78,12 @@ const getStatePollingData = (stateName: string, $: CheerioSelector): p.Poll[] =>
 };
 
 const getStatePollsFromTable = (headerTextElement: CheerioElement, $: CheerioSelector): p.Poll[] => {
-  const tableElement = $(headerTextElement)
+  const tableElementsAfterHeader = $(headerTextElement)
     .parent()
-    .nextAll('.wikitable')[0];
+    .nextAll('.wikitable');
+
+  const tableElement = $($(tableElementsAfterHeader[0]).find('th')[0]).text().trim() === 'Polling aggregation' ?
+    tableElementsAfterHeader[1] : tableElementsAfterHeader[0];
   const tableRows = $(tableElement).find('tr');
   const tableHeaderElement = $(tableRows[0]);
 

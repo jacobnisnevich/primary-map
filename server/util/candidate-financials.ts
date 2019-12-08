@@ -8,7 +8,7 @@ export const candidateCommitteeIds = {
   'Elizabeth Warren': 'C00693234',
   'Oprah Winfrey': undefined,
   'Amy Klobuchar': 'C00696419',
-  'Deval Patrick': undefined,
+  'Deval Patrick': 'C00727156',
   'Andrew Yang': 'C00659938',
   'Joe Kennedy III': undefined,
   'Stacey Abrams': undefined,
@@ -20,5 +20,6 @@ export const candidateCommitteeIds = {
   'John Hickenlooper': 'C00698258',
   'Jay Inslee': 'C00698050',
   'Kirsten Gillibrand': 'C00694018',
-  'Marianne Williamson': 'C00696054'
+  'Marianne Williamson': 'C00696054',
+  'Michael Bloomberg': 'C00728154'
 };
