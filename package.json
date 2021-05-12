@@ -27,7 +27,7 @@
     "bfj": "6.1.1",
     "body-parser": "^1.18.3",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "cheerio": "^1.0.0-rc.2",
     "css-loader": "1.0.0",
     "distinct-colors": "^1.0.4",
